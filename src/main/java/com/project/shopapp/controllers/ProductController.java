@@ -2,7 +2,14 @@ package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.CategoryDTO;
 import com.project.shopapp.dtos.ProductDTO;
+import com.project.shopapp.dtos.ProductImageDTO;
+import com.project.shopapp.exceptions.DataNotFoundException;
+import com.project.shopapp.exceptions.InvalidParamException;
+import com.project.shopapp.models.Product;
+import com.project.shopapp.models.ProductImage;
+import com.project.shopapp.services.product.ProductService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +26,16 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("${api.prefix}/products")
+@RequiredArgsConstructor
 public class ProductController {
-    @GetMapping({"", "/"})
+    private final ProductService productService;
+
+    @GetMapping
     public ResponseEntity<String> getProducts(@RequestParam("page") int page, @RequestParam("limit") int limit) {
         return ResponseEntity.ok(String.format("getProducts here, page = %d, limit = %d", page, limit));
     }
@@ -34,7 +45,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body("Product with ID" + productId);
     }
 
-    @PostMapping(value = {"", "/"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     //@Valid để validate dữ liệu
     //<?> Có thể vừa nhận String và List<String>
     /*{
@@ -44,7 +55,7 @@ public class ProductController {
             "description": "This is a test",
             "category_id": 1
     }*/
-    public ResponseEntity<?> insertProduct(@Valid @ModelAttribute ProductDTO productDTO, BindingResult bindingResult/*, @RequestPart("file") MultipartFile file*/) {
+    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors()) {
                 List<String> errorMessage = bindingResult.getFieldErrors()
@@ -53,10 +64,24 @@ public class ProductController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessage);
             }
+            //Phai luu vao csdl thi moi co productId de lay
+            Product product = productService.createProduct(productDTO);
+            return ResponseEntity.ok(product);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
-            List<MultipartFile> files = productDTO.getFiles();
+    @PostMapping(value = "uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadImages(@ModelAttribute("files") List<MultipartFile> files, @PathVariable("id") Long productId) {
+        try {
+            Product product = productService.getProduct(productId);
             //Nếu không có files thì tạo mảng rỗng
             files = files == null ? new ArrayList<MultipartFile>() : files;
+            if (files.size() > ProductImage.MAXIMUM_IMAGE_PER_PRODUCT) {
+                return ResponseEntity.badRequest().body("Cannot upload more than " + ProductImage.MAXIMUM_IMAGE_PER_PRODUCT + " images");
+            }
+            List<ProductImage> productImages = new ArrayList<>();
             for (MultipartFile file : files) {
                 if (file != null) {
                     if (file.getSize() == 0) {
@@ -72,17 +97,26 @@ public class ProductController {
                     }
                     //Lưu file và cập nhật thumbnail trong DTO
                     String fileName = storeFile(file);
+                    ProductImage productImage = productService.createProductImage(
+                            product.getId(),
+                            ProductImageDTO.builder()
+                                    .imageUrl(fileName)
+                                    .build()
+                    );
+                    productImages.add(productImage);
                 }
             }
-
-            return ResponseEntity.ok("Product created successfully " + productDTO.getFiles());
+            return ResponseEntity.ok().body(productImages);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     public String storeFile(MultipartFile file) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        if(isImageFile(file) || file.getOriginalFilename() == null){
+            throw new IOException("Invalid image file");
+        }
+        String fileName = StringUtils.cleanPath((Objects.requireNonNull(file.getOriginalFilename())));
         //Thêm UUID vào trước tên file để đảm bảo tên file là duy nhất
         String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
         //Đường dẫn đến thư mục luu file
@@ -98,6 +132,11 @@ public class ProductController {
         Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
 
         return uniqueFileName;
+    }
+
+    private boolean isImageFile(MultipartFile file) {
+        String contentType = file.getContentType();
+        return contentType == null || !contentType.startsWith("image/");
     }
 
     @PutMapping("/{id}")

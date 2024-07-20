@@ -1,12 +1,10 @@
 package com.project.shopapp.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.sql.Date;
+import java.util.Date;
+
 
 @Entity
 @Table(name = "users")
@@ -14,12 +12,13 @@ import java.sql.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends BaseEntity{
+@Builder
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "fullname",length = 100)
+    @Column(name = "fullname", length = 100)
     private String fullName;
 
     @Column(name = "phone_number", length = 10, nullable = false)
@@ -31,15 +30,16 @@ public class User extends BaseEntity{
     @Column(name = "password", length = 200, nullable = false)
     private String password;
 
-    private boolean active;
+    @Column(name = "is_active")
+    private Boolean active;
 
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
-    @Column(name = "facebook_account_id")
+    @Column(name = "facebook_account_id", length = 50)
     private String facebookAccountId;
 
-    @Column(name = "google_account_id")
+    @Column(name = "google_account_id", length = 50)
     private String googleAccountId;
 
     @ManyToOne

@@ -1,8 +1,10 @@
 package com.project.shopapp.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.Date;
@@ -17,6 +19,7 @@ public class UserDTO {
     private String fullName;
 
     @NotBlank(message = "Phone number is required")
+    @Size(max = 10, message = "Phone number must not exceed 10 characters")
     @JsonProperty("phone_number")
     private String phoneNumber;
 
@@ -32,10 +35,10 @@ public class UserDTO {
     private Date dateOfBirth;
 
     @JsonProperty("facebook_account_id")
-    private int facebookAccountId;
+    private String facebookAccountId;
 
     @JsonProperty("google_account_id")
-    private int googleAccountId;
+    private String googleAccountId;
 
     @NotNull(message = "Role ID is required")
     @JsonProperty("role_id")
