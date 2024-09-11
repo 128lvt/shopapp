@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Data
 @Getter
 @Setter
@@ -26,6 +29,7 @@ public class OrderDTO {
     @NotBlank(message = "Phone number is required")
     private String phoneNumber;
 
+    @JsonProperty("address")
     private String address;
 
     private String note;
@@ -40,6 +44,9 @@ public class OrderDTO {
 
     @JsonProperty("shipping_address")
     private String shippingAddress;
+
+    @JsonProperty("shipping_date")
+    private LocalDate shippingDate;
 
     @JsonProperty("payment_method")
     private String paymentMethod;

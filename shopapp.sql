@@ -15,7 +15,7 @@ CREATE TABLE
     `password`          VARCHAR(100) NOT NULL DEFAULT '',
     created_at          DATETIME,
     updated_at          DATETIME,
-    is_active           TINYINT               DEFAULT 1,
+    is_active           BIT                   DEFAULT 1,
     date_of_birth       DATE,
     facebook_account_id STRING                DEFAULT '',
     google_account_id   STRING                DEFAULT ''
@@ -103,7 +103,7 @@ CREATE TABLE
     orders
 (
     id           INT PRIMARY KEY AUTO_INCREMENT,
-    user_id      INT,
+    user_id      INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
     fullname     VARCHAR(100) DEFAULT '',
     email        VARCHAR(100) DEFAULT '',
@@ -131,7 +131,7 @@ ALTER TABLE orders
     ADD COLUMN payment_method VARCHAR(100);
 
 ALTER TABLE orders
-    ADD COLUMN active TINYINT (1);
+    ADD COLUMN active BIT DEFAULT 1;
 
 -- Status đơn hàng chỉ được phép nhận một số giá trị cụ thể
 ALTER TABLE orders MODIFY COLUMN status ENUM (

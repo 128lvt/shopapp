@@ -10,6 +10,7 @@ import com.project.shopapp.models.ProductImage;
 import com.project.shopapp.repositories.CategoryRepository;
 import com.project.shopapp.repositories.ProductImageRepository;
 import com.project.shopapp.repositories.ProductRepository;
+import com.project.shopapp.responses.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,9 +46,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<Product> getAllProducts(PageRequest pageRequest) {
+    public Page<ProductResponse> getAllProducts(PageRequest pageRequest) {
         //Lấy danh sách sản paharm theo trang (page) giới hạn (limit)
-        return productRepository.findAll(pageRequest);
+        return productRepository.findAll(pageRequest).map(product -> ProductResponse.fromProduct(product));
     }
 
     @Override
@@ -81,8 +82,13 @@ public class ProductService implements IProductService {
         //Không cho insert quá 5 ảnh cho 1 sản pẩm
         int size = productImageRepository.findByProductId(productId).size();
         if (size >= ProductImage.MAXIMUM_IMAGE_PER_PRODUCT) {
-            throw new InvalidParamException("Number of product's image must be <= "+ProductImage.MAXIMUM_IMAGE_PER_PRODUCT);
+            throw new InvalidParamException("Number of product's image must be <= " + ProductImage.MAXIMUM_IMAGE_PER_PRODUCT);
         }
         return productImageRepository.save(productImage);
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return productRepository.existsByName(name);
     }
 }
