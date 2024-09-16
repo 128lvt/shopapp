@@ -41,6 +41,7 @@ public class OrderService implements IOrderService {
         if (shippingDate.isBefore(LocalDate.now())) {
             throw new DataNotFoundException("Date must be at least today");
         }
+        order.setShippingDate(shippingDate);
         order.setActive(true);
         orderRepository.save(order);
         return order;
