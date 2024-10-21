@@ -8,8 +8,10 @@ import com.project.shopapp.exceptions.DataNotFoundException;
 import com.project.shopapp.exceptions.InvalidParamException;
 import com.project.shopapp.models.Product;
 import com.project.shopapp.models.ProductImage;
+import com.project.shopapp.repositories.ProductRepository;
 import com.project.shopapp.responses.ProductListResponse;
 import com.project.shopapp.responses.ProductResponse;
+import com.project.shopapp.responses.Response;
 import com.project.shopapp.services.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final ProductRepository productRepository;
 
     @PostMapping
     //@Valid để validate dữ liệu
@@ -136,23 +139,33 @@ public class ProductController {
     }
 
     @GetMapping//ProductListResponse chua list ProductResponse va ProductResponse chua cac thong tin vua du
-    public ResponseEntity<ProductListResponse> getProducts(@RequestParam("page") int page, @RequestParam("limit") int limit) {
+    public ResponseEntity<?> getProducts(@RequestParam("page") int page, @RequestParam("limit") int limit) {
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdAt").descending());
         Page<ProductResponse> productPage = productService.getAllProducts(pageRequest);
         int totalPages = productPage.getTotalPages();
         List<ProductResponse> products = productPage.getContent();
-        return ResponseEntity.ok(ProductListResponse
+        Response response = Response
                 .builder()
-                .products(products)
-                .totalPages(totalPages)
-                .build());
+                .data(ProductListResponse
+                        .builder()
+                        .products(products)
+                        .totalPages(totalPages)
+                        .build())
+                .message("success")
+                .build();
+        return ResponseEntity.ok().body(response);
     }
+
+//    @GetMapping("/test")
+//    public ResponseEntity<?> test() {
+//        return ResponseEntity.ok().body(productService.test1());
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable("id") Long productId) {
         try {
             Product product = productService.getProduct(productId);
-            return ResponseEntity.ok(ProductResponse.fromProduct(product));
+            return null;
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -160,7 +173,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable("id") Long productId, @RequestBody ProductDTO productDTO) throws DataNotFoundException {
-        productService.updateProduct(productId,productDTO);
+        productService.updateProduct(productId, productDTO);
         return ResponseEntity.ok("Product updated successfully");
     }
 

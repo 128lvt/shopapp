@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,7 +49,7 @@ public class ProductService implements IProductService {
     @Override
     public Page<ProductResponse> getAllProducts(PageRequest pageRequest) {
         //Lấy danh sách sản paharm theo trang (page) giới hạn (limit)
-        return productRepository.findAll(pageRequest).map(product -> ProductResponse.fromProduct(product));
+        return null;
     }
 
     @Override
