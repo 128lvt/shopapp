@@ -2,6 +2,7 @@ package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.CategoryDTO;
 import com.project.shopapp.models.Category;
+import com.project.shopapp.responses.Response;
 import com.project.shopapp.services.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +31,15 @@ public class CategoryController {
                     .toList();
             return ResponseEntity.badRequest().body(errorMessage);
         }
-        categoryService.createCategory(categoryDTO);
-        return ResponseEntity.ok("Insert category successfully " + categoryDTO);
+        Category category = categoryService.createCategory(categoryDTO);
+        return ResponseEntity.ok().body(Response.builder()
+                .message("Create category successfully")
+                .data(category)
+                .build());
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories(@RequestParam("page") int page, @RequestParam("limit") int limit) {
+    public ResponseEntity<?> getAllCategories(@RequestParam("page") int page, @RequestParam("limit") int limit) {
         List<Category> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }

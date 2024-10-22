@@ -10,13 +10,12 @@ import com.project.shopapp.models.ProductImage;
 import com.project.shopapp.repositories.CategoryRepository;
 import com.project.shopapp.repositories.ProductImageRepository;
 import com.project.shopapp.repositories.ProductRepository;
-import com.project.shopapp.responses.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -47,9 +46,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<ProductResponse> getAllProducts(PageRequest pageRequest) {
+    public Page<Product> getAllProducts(PageRequest pageRequest) {
         //Lấy danh sách sản paharm theo trang (page) giới hạn (limit)
-        return null;
+        return productRepository.findAll(pageRequest);
     }
 
     @Override

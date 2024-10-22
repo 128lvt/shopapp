@@ -2,7 +2,6 @@ package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.UserDTO;
 import com.project.shopapp.dtos.UserLoginDTO;
-import com.project.shopapp.services.user.IUserService;
 import com.project.shopapp.services.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

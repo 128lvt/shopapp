@@ -1,15 +1,12 @@
 package com.project.shopapp.controllers;
 
 import com.github.javafaker.Faker;
-import com.project.shopapp.dtos.CategoryDTO;
 import com.project.shopapp.dtos.ProductDTO;
 import com.project.shopapp.dtos.ProductImageDTO;
 import com.project.shopapp.exceptions.DataNotFoundException;
-import com.project.shopapp.exceptions.InvalidParamException;
 import com.project.shopapp.models.Product;
 import com.project.shopapp.models.ProductImage;
 import com.project.shopapp.repositories.ProductRepository;
-import com.project.shopapp.responses.ProductListResponse;
 import com.project.shopapp.responses.ProductResponse;
 import com.project.shopapp.responses.Response;
 import com.project.shopapp.services.product.ProductService;
@@ -54,21 +51,18 @@ public class ProductController {
             "description": "This is a test",
             "category_id": 1
     }*/
-    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult) {
-        try {
-            if (bindingResult.hasErrors()) {
-                List<String> errorMessage = bindingResult.getFieldErrors()
-                        .stream()
-                        .map(FieldError::getDefaultMessage)
-                        .toList();
-                return ResponseEntity.badRequest().body(errorMessage);
-            }
-            //Phai luu vao csdl thi moi co productId de lay
-            Product product = productService.createProduct(productDTO);
-            return ResponseEntity.ok(product);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult) throws DataNotFoundException {
+        if (bindingResult.hasErrors()) {
+            List<String> errorMessage = bindingResult.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessage);
         }
+        //Phai luu vao database thi moi co productId de lay
+        Product product = productService.createProduct(productDTO);
+        return ResponseEntity.ok(product);
+
     }
 
     @PostMapping(value = "uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -117,7 +111,7 @@ public class ProductController {
         }
         String fileName = StringUtils.cleanPath((Objects.requireNonNull(file.getOriginalFilename())));
         //Thêm UUID vào trước tên file để đảm bảo tên file là duy nhất
-        String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
+        String uniqueFileName = UUID.randomUUID() + "_" + fileName;
         //Đường dẫn đến thư mục luu file
         Path uploadDir = Paths.get("uploads");
 
@@ -138,15 +132,15 @@ public class ProductController {
         return contentType == null || !contentType.startsWith("image/");
     }
 
-    @GetMapping//ProductListResponse chua list ProductResponse va ProductResponse chua cac thong tin vua du
+    @GetMapping
     public ResponseEntity<?> getProducts(@RequestParam("page") int page, @RequestParam("limit") int limit) {
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdAt").descending());
-        Page<ProductResponse> productPage = productService.getAllProducts(pageRequest);
+        Page<Product> productPage = productService.getAllProducts(pageRequest);
         int totalPages = productPage.getTotalPages();
-        List<ProductResponse> products = productPage.getContent();
+        List<Product> products = productPage.getContent();
         Response response = Response
                 .builder()
-                .data(ProductListResponse
+                .data(ProductResponse
                         .builder()
                         .products(products)
                         .totalPages(totalPages)
@@ -156,18 +150,15 @@ public class ProductController {
         return ResponseEntity.ok().body(response);
     }
 
-//    @GetMapping("/test")
-//    public ResponseEntity<?> test() {
-//        return ResponseEntity.ok().body(productService.test1());
-//    }
-
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable("id") Long productId) {
         try {
-            Product product = productService.getProduct(productId);
-            return null;
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(productService.getProduct(productId));
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(Response.builder()
+                    .message("Product not found")
+                    .data(e.getMessage())
+                    .build());
         }
     }
 
@@ -179,18 +170,14 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") Long productId) {
-        try {
-            productService.deleteProduct(productId);
-            return ResponseEntity.ok("delete id=" + productId);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        productService.deleteProduct(productId);
+        return ResponseEntity.ok("delete id=" + productId);
     }
 
-    /*@PostMapping("/generateFakeProducts")*/
+    @PostMapping("/generateFakeProducts")
     public ResponseEntity<String> generateFakeProducts() {
         Faker faker = new Faker();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 5; i++) {
             String productName = faker.commerce().productName();
             if (productService.existsByName(productName)) {
                 continue;
@@ -198,7 +185,7 @@ public class ProductController {
             ProductDTO productDTO = ProductDTO
                     .builder()
                     .name(productName)
-                    .price((float) faker.number().numberBetween(10, 90000000))
+                    .price((double) faker.number().numberBetween(100000, 9000000))
                     .description(faker.lorem().sentence())
                     .thumbnail("")
                     .categoryId((long) faker.number().numberBetween(1, 3))

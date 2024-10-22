@@ -8,11 +8,11 @@ import java.util.Date;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

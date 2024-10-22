@@ -5,10 +5,6 @@ import jakarta.validation.constraints.Min;
 import lombok.*;
 
 @Data
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class OrderDetailDTO {
     @JsonProperty("order_id")
     @Min(value = 1, message = "Order's ID must be > 0")

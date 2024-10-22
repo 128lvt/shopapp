@@ -14,11 +14,11 @@ public class CategoryService implements ICategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public void createCategory(CategoryDTO categoryDTO) {
+    public Category createCategory(CategoryDTO categoryDTO) {
         Category category = Category.builder()
                 .name(categoryDTO.getName())
                 .build();
-        categoryRepository.save(category);
+        return categoryRepository.save(category);
     }
 
     @Override

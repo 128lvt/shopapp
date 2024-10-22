@@ -2,12 +2,10 @@ package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.OrderDTO;
 import com.project.shopapp.models.Order;
-import com.project.shopapp.responses.OrderResponse;
 import com.project.shopapp.services.order.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;

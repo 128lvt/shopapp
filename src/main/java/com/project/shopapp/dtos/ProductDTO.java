@@ -11,10 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Data
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class ProductDTO {
     @NotBlank(message = "Tittle is required")
@@ -22,7 +18,7 @@ public class ProductDTO {
     private String name;
     @Min(value = 0, message = "Price must be greater than or equal to 0")
     @Max(value = 10000000, message = "Price must be less than or equal to 10,000,000")
-    private Float price;
+    private Double price;
     private String thumbnail;
     private String description;
 

@@ -1,22 +1,19 @@
 package com.project.shopapp.responses;
 
-import jakarta.persistence.Column;
+import com.project.shopapp.models.Product;
+import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 
 import java.util.List;
 
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@MappedSuperclass
 @Builder
-public class ProductResponse extends BaseResponse {
-    @Column(name = "product_id")
-    private Long id;
-    @Column(name = "product_name")
-    private String name;
-    private Float price;
-    private String thumbnail;
-    private String description;
-    private List<ProductVariantResponse> variants;
+public class ProductResponse {
+    private List<Product> products;
+    private int totalPages;
 }

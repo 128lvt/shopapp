@@ -1,7 +1,8 @@
 package com.project.shopapp.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.project.shopapp.serializers.DecimalJsonSerializer;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +24,15 @@ public class Product extends BaseEntity {
     @Column(nullable = false, length = 350)
     private String name;
 
-    private Float price;
+    @JsonSerialize(using = DecimalJsonSerializer.class)
+    private Double price;
+
+    @Transient //khong luu du lieu vao database
+    private Long stock;
+
+    public Long getStock() {
+        return variants.stream().mapToLong(ProductVariant::getStock).sum();
+    }
 
     @Column(length = 300)
     private String thumbnail;
@@ -38,4 +47,5 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<ProductVariant> variants = new ArrayList<>();
+
 }

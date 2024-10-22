@@ -10,10 +10,6 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @Data
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class OrderDTO {
     @JsonProperty("user_id")
     @Min(value = 1, message = "User's ID must be > 0")
