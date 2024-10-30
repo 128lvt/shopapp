@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 public class OrderDTO {
@@ -33,7 +32,6 @@ public class OrderDTO {
     @JsonProperty("total_money")
     @Min(value = 0, message = "Total money must be >= 0")
     private Float totalMoney;
-
 
     @JsonProperty("shipping_method")
     private String shippingMethod;

@@ -3,13 +3,14 @@ package com.project.shopapp.controllers;
 import com.github.javafaker.Faker;
 import com.project.shopapp.dtos.ProductDTO;
 import com.project.shopapp.dtos.ProductImageDTO;
+import com.project.shopapp.dtos.ProductVariantDTO;
 import com.project.shopapp.exceptions.DataNotFoundException;
 import com.project.shopapp.models.Product;
 import com.project.shopapp.models.ProductImage;
-import com.project.shopapp.repositories.ProductRepository;
 import com.project.shopapp.responses.ProductResponse;
 import com.project.shopapp.responses.Response;
 import com.project.shopapp.services.product.ProductService;
+import com.project.shopapp.services.variant.VariantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
-    private final ProductRepository productRepository;
+
+    private final VariantService variantService;
 
     @PostMapping
     //@Valid để validate dữ liệu
@@ -59,10 +61,28 @@ public class ProductController {
                     .toList();
             return ResponseEntity.badRequest().body(errorMessage);
         }
-        //Phai luu vao database thi moi co productId de lay
-        Product product = productService.createProduct(productDTO);
-        return ResponseEntity.ok(product);
+        return ResponseEntity.ok().body(Response
+                .builder()
+                .message("create product successfully")
+                .data(productService.createProduct(productDTO))
+                .build());
 
+    }
+
+    @PostMapping("/variant")
+    public ResponseEntity<?> updateProductVariant(@Valid @RequestBody ProductVariantDTO productVariantDTO, BindingResult bindingResult) throws DataNotFoundException {
+        if (bindingResult.hasErrors()) {
+            List<String> errorMessage = bindingResult.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+        return ResponseEntity.ok().body(Response
+                .builder()
+                .message("create product variant successfully")
+                .data(variantService.create(productVariantDTO))
+                .build());
     }
 
     @PostMapping(value = "uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -1,21 +1,47 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.OrderDetailDTO;
+import com.project.shopapp.exceptions.DataNotFoundException;
+import com.project.shopapp.models.OrderDetail;
+import com.project.shopapp.responses.Response;
+import com.project.shopapp.services.order.OrderDetailService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${api.prefix}/order_details")
+@RequiredArgsConstructor
 public class OrderDetailController {
+    private final OrderDetailService orderDetailService;
+
     @PostMapping
-    public ResponseEntity<?> createOrderDetail(@Valid @RequestBody OrderDetailDTO newOrderDetail) {
-        return ResponseEntity.ok().body("createOrderDetail here");
+    public ResponseEntity<?> createOrderDetail(@Valid @RequestBody OrderDetailDTO orderDetailDTO) throws DataNotFoundException {
+        try {
+            OrderDetail orderDetail = orderDetailService.createOrderDetail(orderDetailDTO);
+            return ResponseEntity.ok().body(Response
+                    .builder()
+                    .message("Success")
+                    .data(orderDetail)
+                    .build());
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOrderDetail(@Valid @PathVariable("id") Long id) {
-        return ResponseEntity.ok().body("getOrderDetail with id " + id);
+    public ResponseEntity<?> getOrderDetail(@Valid @PathVariable("id") Long id) throws DataNotFoundException {
+        try {
+            OrderDetail orderDetail = orderDetailService.getOrderDetail(id);
+            return ResponseEntity.ok().body(Response
+                    .builder()
+                    .message("Success")
+                    .data(orderDetail)
+                    .build());
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     //Lay danh sach order_details cua 1 order nao do

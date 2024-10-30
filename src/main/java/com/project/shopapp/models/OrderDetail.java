@@ -1,7 +1,12 @@
 package com.project.shopapp.models;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.project.shopapp.serializers.DecimalJsonSerializer;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Entity
@@ -23,14 +28,14 @@ public class OrderDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column(nullable = false)
-    private Float price;
-
     @Column(name = "number_of_products", nullable = false)
     private Integer numberOfProducts;
 
     @Column(name = "total_money", nullable = false)
-    private Float totalMoney;
+    @JsonSerialize(using = DecimalJsonSerializer.class)
+    private Double totalMoney;
 
-    private String color;
+    @ManyToOne
+    @JoinColumn(name = "variant_id")
+    private ProductVariant productVariant;
 }

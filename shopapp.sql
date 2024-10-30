@@ -141,5 +141,7 @@ CREATE TABLE order_details
     FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE RESTRICT,
     price              FLOAT CHECK (price >= 0),
     number_of_products INT CHECK (number_of_products > 0),
-    total_money        FLOAT
+    total_money        FLOAT,
+    variant_id         INT,
+    FOREIGN KEY (variant_id) REFERENCES product_variants (id) ON DELETE RESTRICT
 );

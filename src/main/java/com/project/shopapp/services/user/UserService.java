@@ -17,7 +17,7 @@ public class UserService implements IUserService {
     private final RoleRepository roleRepository;
 
     @Override
-    public void createUser(UserDTO userDTO) throws DataNotFoundException {
+    public User createUser(UserDTO userDTO) throws DataNotFoundException {
         String phoneNUmber = userDTO.getPhoneNumber();
         //Kiểm tra số điện thoại đ ồn tại hay chưa
         if (userRepository.findByPhoneNumber(phoneNUmber).isPresent()) {
@@ -41,7 +41,7 @@ public class UserService implements IUserService {
             user.setPassword(password);
         }
         user.setActive(true);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override

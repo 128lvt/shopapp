@@ -1,4 +1,4 @@
-package com.project.shopapp.services.service;
+package com.project.shopapp.services.category;
 
 import com.project.shopapp.dtos.CategoryDTO;
 import com.project.shopapp.models.Category;

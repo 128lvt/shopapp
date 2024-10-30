@@ -9,7 +9,6 @@ import com.project.shopapp.repositories.OrderRepository;
 import com.project.shopapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -48,22 +47,32 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Order getOrder(Long id) {
-        return null;
+    public Order getOrder(Long id) throws DataNotFoundException {
+        return orderRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Order not found"));
     }
 
     @Override
-    public Order updateOrder(Long id, OrderDTO orderDTO) {
-        return null;
+    public Order updateOrder(Long id, OrderDTO orderDTO) throws DataNotFoundException {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Order not found"));
+        User existingUser = userRepository.findById(orderDTO.getUserId()).orElseThrow(() -> new DataNotFoundException("User not found"));
+
+        modelMapper.typeMap(OrderDTO.class, Order.class).addMappings(mapper -> mapper.skip(Order::setId));
+        modelMapper.map(orderDTO, order);
+
+        order.setUser(existingUser);
+
+        return orderRepository.save(order);
     }
 
     @Override
     public void deleteOrder(Long id) {
-
+        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setActive(false);
+        orderRepository.save(order);
     }
 
     @Override
-    public List<Order> getAllOrder(Long id) {
-        return List.of();
+    public List<Order> findByUserId(Long id) {
+        return orderRepository.findByUserId(id);
     }
 }

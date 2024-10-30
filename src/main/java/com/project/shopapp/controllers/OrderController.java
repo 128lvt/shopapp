@@ -2,12 +2,11 @@ package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.OrderDTO;
 import com.project.shopapp.models.Order;
+import com.project.shopapp.responses.Response;
 import com.project.shopapp.services.order.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,39 +18,69 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody @Valid OrderDTO orderDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> createOrder(@RequestBody @Valid OrderDTO orderDTO) {
         try {
-            if (bindingResult.hasErrors()) {
-                List<String> errorMessage = bindingResult.getFieldErrors()
-                        .stream()
-                        .map(FieldError::getDefaultMessage)
-                        .toList();
-                return ResponseEntity.badRequest().body(errorMessage);
-            }
             Order order = orderService.createOrder(orderDTO);
-            return ResponseEntity.ok().body(order);
+            return ResponseEntity.ok().body(Response.builder()
+                    .message("getOrders successful")
+                    .data(order)
+                    .build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/{user_id}")
+    @GetMapping("/user/{user_id}")
     public ResponseEntity<?> getOrders(@Valid @PathVariable("user_id") Long userId) {
         try {
-            return ResponseEntity.ok("Lay ra danh sach order theo user_id " + userId);
+            List<Order> orders = orderService.findByUserId(userId);
+            return ResponseEntity.ok().body(Response.builder()
+                    .message("getOrders successful")
+                    .data(orders)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOrder(@Valid @PathVariable("id") Long orderId) {
+        try {
+            Order order = orderService.getOrder(orderId);
+            return ResponseEntity.ok().body(Response.builder()
+                    .message("getOrder successful")
+                    .data(order)
+                    .build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateOrder(@Valid @PathVariable long id, @RequestBody @Valid OrderDTO orderDTO) {
-        return ResponseEntity.ok().body("updateOrder successful");
+    public ResponseEntity<?> updateOrder(@Valid @PathVariable Long id, @RequestBody @Valid OrderDTO orderDTO) {
+        try {
+            Order order = orderService.updateOrder(id, orderDTO);
+            return ResponseEntity.ok().body(Response
+                    .builder()
+                    .message("Update order successfully")
+                    .data(order)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteOrder(@Valid @PathVariable long id) {
+    public ResponseEntity<?> deleteOrder(@Valid @PathVariable Long id) {
         // cap nhat truong active
-        return ResponseEntity.ok().body("deleteOrder successful");
+        try {
+            orderService.deleteOrder(id);
+            return ResponseEntity.ok().body(Response
+                    .builder()
+                    .message("Delete order successfully")
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
