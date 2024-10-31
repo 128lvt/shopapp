@@ -12,6 +12,7 @@ import com.project.shopapp.service.product.ProductService;
 import com.project.shopapp.service.variant.VariantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -71,6 +72,22 @@ public class ProductController {
                     .data(variantService.create(productVariantDTO))
                     .build());
         } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("images/{imageName}")
+    public ResponseEntity<?> viewImage(@PathVariable String imageName) throws DataNotFoundException {
+        try {
+            Path path = Paths.get("uploads/" + imageName);
+            UrlResource resource = new UrlResource(path.toUri());
+
+            if (resource.exists()) {
+                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
