@@ -13,8 +13,10 @@ import com.project.shopapp.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,11 +39,29 @@ public class ProductService implements IProductService {
         return product;
     }
 
+
     @Override
     public Product getProduct(Long id) throws DataNotFoundException {
         //Find by id tra ve kieu optional
         return productRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Cannot find product with id: " + id));
     }
+
+    public Page<Product> searchProducts(String name, Double minPrice, Double maxPrice,
+                                        String description, List<Long> categoryIds,
+                                        String sortOrder, int page, int limit) {
+
+        Sort sort = Sort.by(sortOrder);
+
+        if (sortOrder != null && sortOrder.equals("-1")) {
+            sort = Sort.by(Sort.Order.asc("updatedAt"));
+        } else {
+            assert sortOrder != null;
+            sort = sortOrder.equalsIgnoreCase("desc") ? Sort.by("price").descending() : Sort.by("price").ascending();
+        }
+        PageRequest pageRequest = PageRequest.of(page, limit, sort);
+        return productRepository.findProductsByFilters(name, minPrice, maxPrice, description, categoryIds, pageRequest);
+    }
+
 
     @Override
     public Page<Product> getAllProducts(PageRequest pageRequest) {

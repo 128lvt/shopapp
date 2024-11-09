@@ -167,17 +167,34 @@ public class ProductController {
         Page<Product> productPage = productService.getAllProducts(pageRequest);
         int totalPages = productPage.getTotalPages();
         List<Product> products = productPage.getContent();
-        Response response = Response
-                .builder()
-                .data(ProductResponse
-                        .builder()
-                        .products(products)
-                        .totalPages(totalPages)
-                        .build())
-                .message("success")
-                .build();
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(Response.success(ProductResponse.builder().products(products).totalPages(totalPages).build()));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchProducts(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "minPrice", required = false) Double minPrice,
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "categoryIds", required = false) List<Long> categoryIds,
+            @RequestParam(value = "sortOrder", defaultValue = "-1") String sortOrder,
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit) {
+
+        if (name != null && name.isEmpty()) {
+            name = null;
+        }
+
+        if (categoryIds != null && categoryIds.contains(-1L)) {
+            categoryIds = null;
+        }
+
+        Page<Product> productPage = productService.searchProducts(name, minPrice, maxPrice, description, categoryIds, sortOrder, page, limit);
+        int totalPages = productPage.getTotalPages();
+        List<Product> products = productPage.getContent();
+        return ResponseEntity.ok().body(Response.success(ProductResponse.builder().products(products).totalPages(totalPages).build()));
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable("id") Long productId) {
