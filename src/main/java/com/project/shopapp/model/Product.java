@@ -34,21 +34,17 @@ public class Product extends BaseEntity {
         return variants.stream().mapToLong(ProductVariant::getStock).sum();
     }
 
-    @Column(length = 300)
-    private String thumbnail;
-
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product")
     @JsonManagedReference
-    private List<ProductVariant> variants = new ArrayList<>();
+    private final List<ProductVariant> variants = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product")
     @JsonManagedReference
-    private List<ProductImage> images = new ArrayList<>();
+    private final List<ProductImage> images = new ArrayList<>();
 }

@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -33,8 +32,6 @@ public class ProductService implements IProductService {
                 .category(category)
                 .price(productDTO.getPrice())
                 .description(productDTO.getDescription())
-                .thumbnail(productDTO.getThumbnail())
-                .variants(new ArrayList<>())
                 .build();
         productRepository.save(product);
         return product;
@@ -62,7 +59,6 @@ public class ProductService implements IProductService {
             product.setCategory(category);
             product.setPrice(productDTO.getPrice());
             product.setDescription(productDTO.getDescription());
-            product.setThumbnail(productDTO.getThumbnail());
             productRepository.save(product);
         }
     }

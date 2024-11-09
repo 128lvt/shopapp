@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 
@@ -38,9 +37,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "is_active")
     private Boolean active;
-
-    @Column(name = "date_of_birth")
-    private Date dateOfBirth;
 
     @Column(name = "facebook_account_id", length = 50)
     private String facebookAccountId;

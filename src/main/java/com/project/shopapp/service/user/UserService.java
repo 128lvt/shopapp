@@ -16,6 +16,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService {
@@ -42,7 +45,6 @@ public class UserService implements IUserService {
                 .phoneNumber(userDTO.getPhoneNumber())
                 .password(userDTO.getPassword())
                 .address(userDTO.getAddress())
-                .dateOfBirth(userDTO.getDateOfBirth())
                 .facebookAccountId(userDTO.getFacebookAccountId())
                 .googleAccountId(userDTO.getGoogleAccountId())
                 .build();
@@ -59,7 +61,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public String login(String phoneNumber, String password) throws DataNotFoundException {
+    public Object login(String phoneNumber, String password) throws DataNotFoundException {
         User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new DataNotFoundException("User not found"));
 
         if (user.getFacebookAccountId() == null && user.getGoogleAccountId() == null) {
@@ -69,6 +71,11 @@ public class UserService implements IUserService {
         }
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(phoneNumber, password, user.getAuthorities()));
-        return jwtTokenUtil.generateToken(user);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", jwtTokenUtil.generateToken(user));
+        response.put("user", user);
+
+        return response;
     }
 }

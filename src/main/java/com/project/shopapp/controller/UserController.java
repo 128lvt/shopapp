@@ -35,8 +35,8 @@ public class UserController {
         //Kiểm tra thông tin đăng nhập và sinh token
         //Trả về token trong response
         try {
-            String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
-            return ResponseEntity.ok().body(Response.success(token));
+            Object response = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
+            return ResponseEntity.ok().body(Response.success(response));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Response.error(e.getMessage()));
         }

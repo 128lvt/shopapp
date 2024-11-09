@@ -34,7 +34,6 @@ public class OrderDetailService implements IOrderDetailService {
                 .order(order)
                 .product(product)
                 .numberOfProducts(orderDetailDTO.getNumberOfProducts())
-                .totalMoney(orderDetailDTO.getTotalMoney())
                 .productVariant(productVariant)
                 .build();
         return orderDetailRepository.save(orderDetail);
@@ -50,7 +49,6 @@ public class OrderDetailService implements IOrderDetailService {
         orderDetail.setProduct(product);
         orderDetail.setProductVariant(productVariant);
         orderDetail.setNumberOfProducts(orderDetailDTO.getNumberOfProducts());
-        orderDetail.setTotalMoney(orderDetailDTO.getTotalMoney());
         orderDetail.setOrder(order);
 
         return orderDetailRepository.save(orderDetail);
