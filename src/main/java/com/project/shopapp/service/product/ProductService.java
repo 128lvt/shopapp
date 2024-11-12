@@ -64,13 +64,13 @@ public class ProductService implements IProductService {
 
 
     @Override
-    public Page<Product> getAllProducts(PageRequest pageRequest) {
+    public List<Product> getAllProducts() {
         //Lấy danh sách sản paharm theo trang (page) giới hạn (limit)
-        return productRepository.findAll(pageRequest);
+        return productRepository.findAll();
     }
 
     @Override
-    public void updateProduct(Long id, ProductDTO productDTO) throws DataNotFoundException {
+    public Product updateProduct(Long id, ProductDTO productDTO) throws DataNotFoundException {
         Product product = getProduct(id); //getProduct đã có exception
         if (product != null) {
             //ModelMapper
@@ -79,8 +79,9 @@ public class ProductService implements IProductService {
             product.setCategory(category);
             product.setPrice(productDTO.getPrice());
             product.setDescription(productDTO.getDescription());
-            productRepository.save(product);
+            return productRepository.save(product);
         }
+        return null;
     }
 
     @Override
@@ -108,4 +109,15 @@ public class ProductService implements IProductService {
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }
+
+    public ProductImage getProductImage(Long productImageId) throws DataNotFoundException {
+        return productImageRepository.findById(productImageId).orElseThrow(() -> new DataNotFoundException("Không tìm thấy Image"));
+    }
+
+    public void updateProductImage(Long productImageId, ProductImage productImage) throws DataNotFoundException, InvalidParamException {
+        productImage.setImageUrl(productImage.getImageUrl());
+        productImageRepository.save(productImage);
+    }
+    
+
 }

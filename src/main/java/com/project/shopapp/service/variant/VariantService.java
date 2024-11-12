@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class VariantService implements IVariantService {
@@ -24,5 +26,18 @@ public class VariantService implements IVariantService {
         ProductVariant productVariant = new ProductVariant();
         modelMapper.map(productVariantDTO, productVariant);
         return productVariantRepository.save(productVariant);
+    }
+
+    public ProductVariant update(Long variantId, ProductVariantDTO productVariantDTO) throws DataNotFoundException {
+        ProductVariant variant = productVariantRepository.findById(variantId).orElseThrow(() -> new DataNotFoundException("Variant not found"));
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.typeMap(ProductVariantDTO.class, ProductVariant.class)
+                .addMappings(mapper -> mapper.skip(ProductVariant::setId));
+        modelMapper.map(productVariantDTO, variant);
+        return productVariantRepository.save(variant);
+    }
+
+    public List<ProductVariant> getVariantByProductId(Long productId) {
+        return productVariantRepository.findByProductId(productId);
     }
 }

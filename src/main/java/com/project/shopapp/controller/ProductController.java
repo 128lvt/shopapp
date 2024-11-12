@@ -7,6 +7,7 @@ import com.project.shopapp.dto.ProductVariantDTO;
 import com.project.shopapp.exception.DataNotFoundException;
 import com.project.shopapp.model.Product;
 import com.project.shopapp.model.ProductImage;
+import com.project.shopapp.model.ProductVariant;
 import com.project.shopapp.response.ProductResponse;
 import com.project.shopapp.response.Response;
 import com.project.shopapp.service.product.ProductService;
@@ -15,8 +16,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -65,8 +64,14 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/variant/{id}")
+    public ResponseEntity<?> getVariant(@PathVariable Long id) {
+        List<ProductVariant> productVariants = variantService.getVariantByProductId(id);
+        return ResponseEntity.ok().body(Response.success(productVariants));
+    }
+
     @PostMapping("/variant")
-    public ResponseEntity<?> updateProductVariant(@Valid @RequestBody ProductVariantDTO productVariantDTO) throws DataNotFoundException {
+    public ResponseEntity<?> createProductVariant(@Valid @RequestBody ProductVariantDTO productVariantDTO) {
         try {
             return ResponseEntity.ok().body(Response
                     .builder()
@@ -76,6 +81,11 @@ public class ProductController {
         } catch (DataNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PutMapping("/variant/{id}")
+    public ResponseEntity<?> updateProductVariant(@PathVariable Long id, @Valid @RequestBody ProductVariantDTO productVariantDTO) throws DataNotFoundException {
+        return ResponseEntity.ok().body(Response.success(variantService.update(id, productVariantDTO)));
     }
 
     @GetMapping("images/{imageName}")
@@ -89,6 +99,39 @@ public class ProductController {
             } else {
                 return ResponseEntity.notFound().build();
             }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping(value = "uploads/{productImageId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateProductImage(
+            @PathVariable("productImageId") Long productImageId,
+            @RequestParam("files") MultipartFile file) {
+        try {
+            ProductImage productImage = productService.getProductImage(productImageId);
+            if (productImage == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product image not found");
+            }
+
+            // Kiểm tra kích thước và định dạng của file
+            if (file.getSize() == 0) {
+                return ResponseEntity.badRequest().body("File is empty");
+            }
+            if (file.getSize() > 10 * 1024 * 1024) {
+                return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("File is too large! Maximum size is 10MB");
+            }
+            String contentType = file.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("File must be an image");
+            }
+
+            // Lưu file mới và cập nhật URL trong ProductImage
+            String fileName = storeFile(file);
+            productImage.setImageUrl(fileName);
+            productService.updateProductImage(productImageId, productImage);
+
+            return ResponseEntity.ok().body(Response.success(null));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -162,12 +205,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getProducts(@RequestParam("page") int page, @RequestParam("limit") int limit) {
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdAt").ascending());
-        Page<Product> productPage = productService.getAllProducts(pageRequest);
-        int totalPages = productPage.getTotalPages();
-        List<Product> products = productPage.getContent();
-        return ResponseEntity.ok().body(Response.success(ProductResponse.builder().products(products).totalPages(totalPages).build()));
+    public ResponseEntity<?> getProducts() {
+//        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdAt").ascending());
+//        Page<Product> productPage = productService.getAllProducts(pageRequest);
+//        int totalPages = productPage.getTotalPages();
+//        List<Product> products = productPage.getContent();
+//        return ResponseEntity.ok().body(Response.success(ProductResponse.builder().products(products).totalPages(totalPages).build()));
+        return ResponseEntity.ok().body(Response.success(productService.getAllProducts()));
+
     }
 
     @GetMapping("/search")
@@ -185,7 +230,7 @@ public class ProductController {
             name = null;
         }
 
-        if (categoryIds != null && categoryIds.contains(-1L)) {
+        if (categoryIds.isEmpty()) {
             categoryIds = null;
         }
 
@@ -209,9 +254,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable("id") Long productId, @RequestBody ProductDTO productDTO) throws DataNotFoundException {
-        productService.updateProduct(productId, productDTO);
-        return ResponseEntity.ok("Product updated successfully");
+    public ResponseEntity<?> updateProduct(@PathVariable("id") Long productId, @RequestBody ProductDTO productDTO) throws DataNotFoundException {
+        Product product = productService.updateProduct(productId, productDTO);
+        return ResponseEntity.ok().body(Response.success(product));
     }
 
     @DeleteMapping("/{id}")
@@ -243,4 +288,5 @@ public class ProductController {
         }
         return ResponseEntity.ok("generateFakeProducts");
     }
+
 }

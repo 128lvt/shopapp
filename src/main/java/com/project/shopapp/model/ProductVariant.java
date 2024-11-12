@@ -1,8 +1,12 @@
 package com.project.shopapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "product_variants")
@@ -19,6 +23,12 @@ public class ProductVariant {
     @JoinColumn(name = "product_id", nullable = false)
     @JsonBackReference
     private Product product;
+
+    @Transient
+    @JsonProperty("p_id")
+    public Long pId() {
+        return product != null ? product.getId() : null;
+    }
 
     private String size;
 
