@@ -98,6 +98,7 @@ public class WebSecurityConfig {
         config.setAllowCredentials(true);
 //        config.addAllowedOrigin("https://e-commerce-navy-eta.vercel.app/");
         config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://localhost:3001");
         config.addAllowedHeader("*"); // Cho phép tất cả các header
         config.addAllowedMethod("*"); // Cho phép tất cả các phương thức (GET, POST, PUT, DELETE, ...)
         source.registerCorsConfiguration("/**", config); // Áp dụng cho tất cả các endpoint
@@ -110,6 +111,7 @@ public class WebSecurityConfig {
         configuration.setAllowCredentials(true);
 //        configuration.addAllowedOrigin("https://e-commerce-navy-eta.vercel.app");
         configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("http://localhost:3001");
         configuration.addAllowedHeader("*"); // Cho phép tất cả các header
         configuration.addAllowedMethod("*"); // Cho phép tất cả các phương thức
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

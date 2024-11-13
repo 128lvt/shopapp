@@ -3,8 +3,11 @@ package com.project.shopapp.controller;
 import com.project.shopapp.dto.OrderDetailDTO;
 import com.project.shopapp.exception.DataNotFoundException;
 import com.project.shopapp.model.OrderDetail;
+import com.project.shopapp.model.ProductVariant;
 import com.project.shopapp.response.Response;
 import com.project.shopapp.service.order.OrderDetailService;
+import com.project.shopapp.service.order.OrderService;
+import com.project.shopapp.service.variant.VariantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +20,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderDetailController {
     private final OrderDetailService orderDetailService;
+    private final VariantService variantService;
+    private final OrderService orderService;
 
     @PostMapping
     public ResponseEntity<?> createOrderDetail(@Valid @RequestBody OrderDetailDTO orderDetailDTO) throws DataNotFoundException {
         try {
+            ProductVariant productVariant = variantService.getVariant(orderDetailDTO.getVariantId());
+            if (productVariant.getStock() < orderDetailDTO.getNumberOfProducts()) {
+                orderService.hardDelete(orderDetailDTO.getOrderId());
+                return ResponseEntity.badRequest().body(Response.error("Số lượng sản phẩm vượt quá số lượng trong kho"));
+            }
             OrderDetail orderDetail = orderDetailService.createOrderDetail(orderDetailDTO);
             return ResponseEntity.ok().body(Response.success(orderDetail));
         } catch (DataNotFoundException e) {

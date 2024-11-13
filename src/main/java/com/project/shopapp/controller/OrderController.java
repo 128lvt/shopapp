@@ -4,6 +4,7 @@ import com.project.shopapp.dto.OrderDTO;
 import com.project.shopapp.model.Order;
 import com.project.shopapp.response.Response;
 import com.project.shopapp.service.order.OrderService;
+import com.project.shopapp.service.variant.VariantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
+    private final VariantService variantService;
 
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody @Valid OrderDTO orderDTO) {
@@ -68,6 +70,11 @@ public class OrderController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllOrders() {
+        return ResponseEntity.ok().body(Response.success(orderService.getAllOrders()));
     }
 
     @DeleteMapping("/{id}")

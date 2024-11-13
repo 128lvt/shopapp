@@ -71,21 +71,35 @@ public class ProductController {
     }
 
     @PostMapping("/variant")
-    public ResponseEntity<?> createProductVariant(@Valid @RequestBody ProductVariantDTO productVariantDTO) {
+    public ResponseEntity<?> createProductVariant(@Valid @RequestBody ProductVariantDTO productVariantDTO) throws Exception {
         try {
-            return ResponseEntity.ok().body(Response
-                    .builder()
-                    .message("create product variant successfully")
-                    .data(variantService.create(productVariantDTO))
-                    .build());
+            if (variantService.existsVariant(productVariantDTO.getProductId(), productVariantDTO.getColor(), productVariantDTO.getSize())) {
+                return ResponseEntity.badRequest().body(Response.error("Color, size đã tồn tại"));
+            } else {
+                return ResponseEntity.ok().body(Response
+                        .builder()
+                        .message("Create product variant successfully")
+                        .data(variantService.create(productVariantDTO))
+                        .build());
+            }
+
         } catch (DataNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error: " + e.getMessage());
         }
     }
+
 
     @PutMapping("/variant/{id}")
     public ResponseEntity<?> updateProductVariant(@PathVariable Long id, @Valid @RequestBody ProductVariantDTO productVariantDTO) throws DataNotFoundException {
         return ResponseEntity.ok().body(Response.success(variantService.update(id, productVariantDTO)));
+    }
+
+    @DeleteMapping("/variant/{id}")
+    public ResponseEntity<?> deleteVariant(@PathVariable Long id) throws DataNotFoundException {
+        variantService.delete(id);
+        return ResponseEntity.ok().body(Response.success(null));
     }
 
     @GetMapping("images/{imageName}")

@@ -13,4 +13,6 @@ public class ProductVariantDTO {
     private String size;
 
     private int stock;
+
+    private Long v_id;
 }
