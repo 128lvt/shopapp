@@ -37,5 +37,5 @@ jwt:
   secret_key: mlfpofQBNxVBBxFi2tWyB8CU6jbSR9HM
 cors:
   allowed:
-    origins: "http://localhost:3000,http://locahost:30001"
+    origins: "http://localhost:3000,http://locahost:3001"
 
