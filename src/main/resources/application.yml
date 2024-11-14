@@ -1,22 +1,25 @@
 server:
   port: 8443
 #  ssl:
-#    key-store: classpath:keystore.p12
-#    key-store-password: 1234
-#    key-store-type: PKCS12
-#    key-alias: myalias
-#    enabled: true
+#    key-store: classpath:keystore.jks
+#    key-store-password: password
+#    key-store-type: JKS
+#    key-alias: mycert
+#    enabled: on
 spring:
   datasource:
     #    url: jdbc:mysql://sql.freedb.tech:3306/freedb_productdb?useSSL=false&serverTimeZone=UTC&allowPublicKeyRetrieval=true
+    #    username: freedb_user000000
+    #    password: c@BM8pyyr!BBh$z
+
+
     url: jdbc:mysql://localhost:3308/shopapp?useSSL=false&serverTimeZone=UTC&allowPublicKeyRetrieval=true
-    driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: P@ssw0rd
-  #    username: freedb_user000000
-  #    password: c@BM8pyyr!BBh$z
+
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: none
     properties:
@@ -32,3 +35,7 @@ api:
 jwt:
   expiration: 259200 #30 ngay
   secret_key: mlfpofQBNxVBBxFi2tWyB8CU6jbSR9HM
+cors:
+  allowed:
+    origins: "http://localhost:3000,http://locahost:30001"
+

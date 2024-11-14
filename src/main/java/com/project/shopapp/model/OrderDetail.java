@@ -1,7 +1,7 @@
 package com.project.shopapp.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,12 +32,9 @@ public class OrderDetail {
     @Column(name = "number_of_products", nullable = false)
     private Integer numberOfProducts;
 
-//    @Column(name = "total_money", nullable = false)
-//    @JsonSerialize(using = DecimalJsonSerializer.class)
-//    private Double totalMoney;
 
     @ManyToOne
     @JoinColumn(name = "variant_id")
-    @JsonBackReference
+    @JsonManagedReference
     private ProductVariant productVariant;
 }

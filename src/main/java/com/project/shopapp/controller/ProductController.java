@@ -282,7 +282,7 @@ public class ProductController {
     @PostMapping("/generateFakeProducts")
     public ResponseEntity<String> generateFakeProducts() {
         Faker faker = new Faker();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 30; i++) {
             String productName = faker.commerce().productName();
             if (productService.existsByName(productName)) {
                 continue;

@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "product_variants")
 @Data
@@ -35,4 +37,8 @@ public class ProductVariant {
     private String color;
 
     private int stock;
+
+    @OneToMany(mappedBy = "productVariant")
+    @JsonBackReference  // Ngừng serialization để tránh vòng lặp
+    private List<OrderDetail> orderDetails;
 }
