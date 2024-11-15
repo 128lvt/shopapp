@@ -25,20 +25,23 @@ REPLACE INTO `categories` (`id`, `name`) VALUES
 
 -- Dumping data for table shopapp.orders: ~4 rows (approximately)
 REPLACE INTO `orders` (`id`, `user_id`, `fullname`, `email`, `phone_number`, `address`, `note`, `order_date`, `status`, `total_money`, `shipping_method`, `shipping_address`, `shipping_date`, `tracking_number`, `payment_method`, `active`) VALUES
-	(10000, 10000, 'dev', '124ugust@gmail.com', '123123', '112313', '123123', '2024-11-14 14:13:04', 'pending', 2773902.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
-	(10001, 10000, 'dev', 'fvnbvhd@gmail.com', '1125533', '123123', '1123123', '2024-11-14 14:13:17', 'pending', 2773902.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
-	(10002, 10000, 'dev', '128lvt@gmail.com', '0123456789', 'Long An', 'Đẹp Trai', '2024-11-14 00:00:00', 'pending', 2913765.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
-	(10003, 10000, 'dev', '124ugust@gmail.com', '12312312312', '312312312312', '3123123123', '2024-11-14 00:00:00', 'pending', 4303095.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1');
+	(10005, 10001, 'user', '124ugust@gmail.com', '0123456789', '123', '', '2024-11-14 00:00:00', 'Chờ xác nhận', 2773902.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
+	(10006, 10000, 'dev', 'lvtdragun@gmail.com', '0123456789', 'Long An', '', '2024-11-14 00:00:00', 'Chờ xác nhận', 482473.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
+	(10007, 10000, 'dev', '124ugust@gmail.com', '0123456789', 'Long An', 'ĐẸP TRAI', '2024-11-14 00:00:00', 'Chờ xác nhận', 4824730.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
+	(10008, 10000, 'dev', 'lvtdragun@gmail.com', '0123456789', 'Long An', '', '2024-11-14 00:00:00', 'Chờ xác nhận', 36060730.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
+	(10009, 10000, 'dev', 'lvtdragun@gmail.com', '0123456789', 'Long An', '', '2024-11-14 00:00:00', 'Chờ xác nhận', 839178.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
+	(10010, 10000, 'dev', '124ugust@gmail.comccc', '0123456789', 'Long An', '', '2024-11-14 00:00:00', 'Chờ xác nhận', 52704136.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1');
 
 -- Dumping data for table shopapp.order_details: ~5 rows (approximately)
 REPLACE INTO `order_details` (`id`, `order_id`, `product_id`, `number_of_products`, `total_money`, `variant_id`) VALUES
-	(10000, 10000, 10020, 1, NULL, 10177),
-	(10001, 10001, 10020, 1, NULL, 10177),
-	(10002, 10002, 10001, 1, NULL, 10059),
-	(10003, 10002, 10020, 1, NULL, 10174),
-	(10004, 10003, 10022, 1, NULL, 10189);
+	(10006, 10005, 10020, 1, NULL, 10175),
+	(10007, 10006, 10017, 1, NULL, 10158),
+	(10008, 10007, 10017, 10, NULL, 10154),
+	(10009, 10008, 10020, 13, NULL, 10172),
+	(10010, 10009, 10001, 6, NULL, 10060),
+	(10011, 10010, 10020, 19, NULL, 10176);
 
--- Dumping data for table shopapp.products: ~0 rows (approximately)
+-- Dumping data for table shopapp.products: ~30 rows (approximately)
 REPLACE INTO `products` (`id`, `name`, `price`, `description`, `created_at`, `updated_at`, `category_id`) VALUES
 	(10000, 'Synergistic Cotton Bag', 1680380.000000, 'Sint dolores beatae sit voluptates eos dolorem.', '2024-11-13 21:33:52', '2024-11-13 21:33:52', 10002),
 	(10001, 'Gorgeous Iron Hat', 139863.000000, 'Nulla adipisci veniam corrupti sint laudantium quae sint.', '2024-11-13 21:33:52', '2024-11-13 21:33:52', 10004),
@@ -69,9 +72,10 @@ REPLACE INTO `products` (`id`, `name`, `price`, `description`, `created_at`, `up
 	(10026, 'Small Silk Car', 7926475.000000, 'Modi ea esse.', '2024-11-13 21:33:53', '2024-11-13 21:33:53', 10004),
 	(10027, 'Incredible Bronze Shoes', 7468277.000000, 'Dolorem hic eligendi itaque.', '2024-11-13 21:33:53', '2024-11-13 21:33:53', 10003),
 	(10028, 'Gorgeous Wool Coat', 2753201.000000, 'Facere ut dolores asperiores.', '2024-11-13 21:33:53', '2024-11-13 21:33:53', 10004),
-	(10029, 'Intelligent Wooden Wallet', 3810479.000000, 'Et dolorem non.', '2024-11-13 21:33:53', '2024-11-13 21:33:53', 10002);
+	(10029, 'Intelligent Wooden Wallet', 3810479.000000, 'Et dolorem non.', '2024-11-13 21:33:53', '2024-11-13 21:33:53', 10002),
+	(10030, 'IPad Pro 2023', 100000.000000, 'This is a test', '2024-11-14 18:08:49', '2024-11-14 18:08:49', 10001);
 
--- Dumping data for table shopapp.product_images: ~0 rows (approximately)
+-- Dumping data for table shopapp.product_images: ~30 rows (approximately)
 REPLACE INTO `product_images` (`id`, `product_id`, `image_url`) VALUES
 	(10000, 10000, '88447db4-c461-4601-9b0a-e2f318af57c7_001.jpg'),
 	(10001, 10001, '8ee28732-dc71-4926-881e-366c3e488787_002.jpg'),
@@ -104,7 +108,7 @@ REPLACE INTO `product_images` (`id`, `product_id`, `image_url`) VALUES
 	(10028, 10022, '49b9bf20-1248-42a1-9eea-d4b3f454abf9_046.jpg'),
 	(10029, 10021, '2a5b0fb8-2675-4615-a730-f84a63cf9894_110.jpg');
 
--- Dumping data for table shopapp.product_variants: ~0 rows (approximately)
+-- Dumping data for table shopapp.product_variants: ~183 rows (approximately)
 REPLACE INTO `product_variants` (`id`, `product_id`, `size`, `color`, `stock`) VALUES
 	(10049, 10000, 'S', 'Đen', 100),
 	(10050, 10000, 'M', 'Đen', 100),
@@ -117,7 +121,7 @@ REPLACE INTO `product_variants` (`id`, `product_id`, `size`, `color`, `stock`) V
 	(10057, 10000, 'L', 'Đen', 100),
 	(10058, 10001, 'S', 'Trắng', 100),
 	(10059, 10001, 'M', 'Trắng', 100),
-	(10060, 10001, 'L', 'Trắng', 100),
+	(10060, 10001, 'L', 'Trắng', 94),
 	(10061, 10001, 'S', 'Đen', 100),
 	(10062, 10001, 'M', 'Đen', 100),
 	(10063, 10001, 'L', 'Đen', 100),
@@ -211,11 +215,11 @@ REPLACE INTO `product_variants` (`id`, `product_id`, `size`, `color`, `stock`) V
 	(10151, 10016, 'S', 'Đen', 100),
 	(10152, 10016, 'M', 'Đen', 100),
 	(10153, 10016, 'L', 'Đen', 100),
-	(10154, 10017, 'S', 'Trắng', 100),
+	(10154, 10017, 'S', 'Trắng', 90),
 	(10155, 10017, 'M', 'Trắng', 100),
 	(10156, 10017, 'L', 'Trắng', 100),
 	(10157, 10017, 'S', 'Đen', 100),
-	(10158, 10017, 'M', 'Đen', 100),
+	(10158, 10017, 'M', 'Đen', 99),
 	(10159, 10017, 'L', 'Đen', 100),
 	(10160, 10018, 'S', 'Trắng', 100),
 	(10161, 10018, 'M', 'Trắng', 100),
@@ -229,11 +233,11 @@ REPLACE INTO `product_variants` (`id`, `product_id`, `size`, `color`, `stock`) V
 	(10169, 10019, 'S', 'Đen', 100),
 	(10170, 10019, 'M', 'Đen', 100),
 	(10171, 10019, 'L', 'Đen', 100),
-	(10172, 10020, 'S', 'Trắng', 100),
+	(10172, 10020, 'S', 'Trắng', 87),
 	(10173, 10020, 'M', 'Trắng', 100),
 	(10174, 10020, 'L', 'Trắng', 100),
 	(10175, 10020, 'S', 'Đen', 100),
-	(10176, 10020, 'M', 'Đen', 100),
+	(10176, 10020, 'M', 'Đen', 81),
 	(10177, 10020, 'L', 'Đen', 100),
 	(10178, 10021, 'S', 'Trắng', 100),
 	(10179, 10021, 'M', 'Trắng', 100),
@@ -290,7 +294,7 @@ REPLACE INTO `product_variants` (`id`, `product_id`, `size`, `color`, `stock`) V
 	(10230, 10029, 'M', 'Đen', 100),
 	(10231, 10029, 'L', 'Đen', 100);
 
--- Dumping data for table shopapp.roles: ~0 rows (approximately)
+-- Dumping data for table shopapp.roles: ~3 rows (approximately)
 REPLACE INTO `roles` (`id`, `name`) VALUES
 	(10000, 'dev'),
 	(10001, 'admin'),
@@ -300,9 +304,11 @@ REPLACE INTO `roles` (`id`, `name`) VALUES
 
 -- Dumping data for table shopapp.tokens: ~0 rows (approximately)
 
--- Dumping data for table shopapp.users: ~0 rows (approximately)
+-- Dumping data for table shopapp.users: ~1 rows (approximately)
 REPLACE INTO `users` (`id`, `fullname`, `phone_number`, `address`, `password`, `created_at`, `updated_at`, `is_active`, `facebook_account_id`, `google_account_id`, `role_id`) VALUES
-	(10000, 'dev', '123', 'VietNam', '$2a$10$PlgEyrxTz7NOMRI6SLh65udwD.SLvgiAGc6uowE1dWDa83z7oP6hK', '2024-11-13 21:31:28', '2024-11-13 21:31:28', b'1', NULL, NULL, 10000);
+	(10000, 'dev', '123', 'VietNam', '$2a$10$PlgEyrxTz7NOMRI6SLh65udwD.SLvgiAGc6uowE1dWDa83z7oP6hK', '2024-11-13 21:31:28', '2024-11-13 21:31:28', b'1', NULL, NULL, 10000),
+	(10001, 'user', '000', 'VietNam', '$2a$10$rZ2e6GD8tAXWO9NW4DdkE.p4pkAGoDANaeSbIEfQ4YD56PRTNKY6.', '2024-11-14 20:06:44', '2024-11-14 13:07:22', b'1', NULL, NULL, 10002),
+	(10002, 'user', '111', 'VietNam', '$2a$10$hU230BMkH7lu9i6ltmGVPeVR9JzFeoEvJIeGGmblyZPdK5r.EvdYK', '2024-11-14 20:19:01', '2024-11-14 20:19:01', b'1', NULL, NULL, 10002);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

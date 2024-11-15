@@ -3,7 +3,6 @@ package com.project.shopapp.service.user;
 import com.project.shopapp.component.JwtTokenUtil;
 import com.project.shopapp.dto.UserDTO;
 import com.project.shopapp.exception.DataNotFoundException;
-import com.project.shopapp.exception.PermissionDenyException;
 import com.project.shopapp.model.Role;
 import com.project.shopapp.model.User;
 import com.project.shopapp.repository.RoleRepository;
@@ -30,19 +29,17 @@ public class UserService implements IUserService {
 
     @Override
     public User createUser(UserDTO userDTO) throws Exception {
-        String phoneNUmber = userDTO.getPhoneNumber();
+        String phoneNUmber = userDTO.getEmail();
         //Kiểm tra số điện thoại đ ồn tại hay chưa
-        if (userRepository.findByPhoneNumber(phoneNUmber).isPresent()) {
-            throw new DataIntegrityViolationException("Phone number already exists");
+        if (userRepository.findByEmail(phoneNUmber).isPresent()) {
+            throw new DataIntegrityViolationException("Email already exists");
         }
-        Role role = roleRepository.findById(userDTO.getRoleId()).orElseThrow(() -> new DataNotFoundException("Role not found"));
-        if (role.getName().toUpperCase().equals(Role.ADMIN)) {
-            throw new PermissionDenyException("You can't register an ADMIN account");
-        }
-        //Convert UserDTO -> User
+
+        Role role = roleRepository.findByName("user");
+
         User user = User.builder()
                 .fullName(userDTO.getFullName())
-                .phoneNumber(userDTO.getPhoneNumber())
+                .email(userDTO.getEmail())
                 .password(userDTO.getPassword())
                 .address(userDTO.getAddress())
                 .facebookAccountId(userDTO.getFacebookAccountId())
@@ -61,8 +58,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Object login(String phoneNumber, String password) throws DataNotFoundException {
-        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new DataNotFoundException("User not found"));
+    public Object login(String email, String password) throws DataNotFoundException {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new DataNotFoundException("User not found"));
 
         if (user.getFacebookAccountId() == null && user.getGoogleAccountId() == null) {
             if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -70,7 +67,7 @@ public class UserService implements IUserService {
             }
         }
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(phoneNumber, password, user.getAuthorities()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password, user.getAuthorities()));
 
         Map<String, Object> response = new HashMap<>();
         response.put("token", jwtTokenUtil.generateToken(user));
@@ -78,4 +75,16 @@ public class UserService implements IUserService {
 
         return response;
     }
+
+    public User findByEmail(String email) throws DataNotFoundException {
+        return userRepository.findByEmail(email).orElseThrow(() -> new DataNotFoundException("User not found"));
+    }
+
+    public void setPassword(String email, String password) throws DataNotFoundException {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new DataNotFoundException("User not found"));
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
+
+    
 }

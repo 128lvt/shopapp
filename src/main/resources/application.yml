@@ -7,6 +7,17 @@ server:
 #    key-alias: mycert
 #    enabled: on
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   datasource:
     #    url: jdbc:mysql://sql.freedb.tech:3306/freedb_productdb?useSSL=false&serverTimeZone=UTC&allowPublicKeyRetrieval=true
     #    username: freedb_user000000

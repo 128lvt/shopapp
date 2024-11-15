@@ -2,8 +2,6 @@ package com.project.shopapp.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -11,10 +9,9 @@ public class UserDTO {
     @JsonProperty("fullname")
     private String fullName;
 
-    @NotBlank(message = "Phone number is required")
-    @Size(max = 10, message = "Phone number must not exceed 10 characters")
-    @JsonProperty("phone_number")
-    private String phoneNumber;
+    @NotBlank(message = "Email is required")
+    @JsonProperty("email")
+    private String email;
 
     private String address;
 
@@ -30,7 +27,7 @@ public class UserDTO {
     @JsonProperty("google_account_id")
     private String googleAccountId;
 
-    @NotNull(message = "Role ID is required")
-    @JsonProperty("role_id")
-    private Long roleId;
+//    @NotNull(message = "Role ID is required")
+//    @JsonProperty("role_id")
+//    private Long roleId;
 }
