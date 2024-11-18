@@ -1,5 +1,6 @@
 package com.project.shopapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,10 +28,11 @@ import lombok.Setter;
                         @FieldResult(name = "december", column = "December")
                 }
         )
-) // Tên của view trong cơ sở dữ liệu
+)
 public class TopSellingProductsMonthly {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long year;
 
     private Long january;

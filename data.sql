@@ -23,23 +23,28 @@ REPLACE INTO `categories` (`id`, `name`) VALUES
 	(10004, 'Quần Âu'),
 	(10005, 'Quần Kaki');
 
--- Dumping data for table shopapp.orders: ~4 rows (approximately)
+-- Dumping data for table shopapp.orders: ~7 rows (approximately)
 REPLACE INTO `orders` (`id`, `user_id`, `fullname`, `email`, `phone_number`, `address`, `note`, `order_date`, `status`, `total_money`, `shipping_method`, `shipping_address`, `shipping_date`, `tracking_number`, `payment_method`, `active`) VALUES
-	(10005, 10001, 'user', '124ugust@gmail.com', '0123456789', '123', '', '2024-11-14 00:00:00', 'Chờ xác nhận', 2773902.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
+	(10005, 10001, 'user', '124ugust@gmail.com', '0123456789', '123', '', '2023-09-13 23:59:58', 'Chờ xác nhận', 2773902.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
 	(10006, 10000, 'dev', 'lvtdragun@gmail.com', '0123456789', 'Long An', '', '2024-11-14 00:00:00', 'Chờ xác nhận', 482473.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
 	(10007, 10000, 'dev', '124ugust@gmail.com', '0123456789', 'Long An', 'ĐẸP TRAI', '2024-11-14 00:00:00', 'Chờ xác nhận', 4824730.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
 	(10008, 10000, 'dev', 'lvtdragun@gmail.com', '0123456789', 'Long An', '', '2024-11-14 00:00:00', 'Chờ xác nhận', 36060730.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
 	(10009, 10000, 'dev', 'lvtdragun@gmail.com', '0123456789', 'Long An', '', '2024-11-14 00:00:00', 'Chờ xác nhận', 839178.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
-	(10010, 10000, 'dev', '124ugust@gmail.comccc', '0123456789', 'Long An', '', '2024-11-14 00:00:00', 'Chờ xác nhận', 52704136.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1');
+	(10010, 10000, 'dev', '124ugust@gmail.comccc', '0123456789', 'Long An', '', '2024-11-14 00:00:00', 'Chờ xác nhận', 52704136.000000, 'standard', NULL, '2024-11-14', NULL, 'cod', b'1'),
+	(10011, 10004, 'user', '124ugust@gmail.com', '0123456789', 'Long An', '', '2024-11-16 00:00:00', 'Đang giao hàng', 10221478.000000, 'standard', NULL, '2024-11-16', NULL, 'cod', b'1'),
+	(10012, 10004, 'user', 'ingame902@gmail.com', '0123456789', 'Long An', '', '2024-11-16 00:00:00', 'Chờ xác nhận', 1680380.000000, 'standard', NULL, '2024-11-16', NULL, 'cod', b'1');
 
--- Dumping data for table shopapp.order_details: ~5 rows (approximately)
+-- Dumping data for table shopapp.order_details: ~8 rows (approximately)
 REPLACE INTO `order_details` (`id`, `order_id`, `product_id`, `number_of_products`, `total_money`, `variant_id`) VALUES
 	(10006, 10005, 10020, 1, NULL, 10175),
 	(10007, 10006, 10017, 1, NULL, 10158),
 	(10008, 10007, 10017, 10, NULL, 10154),
 	(10009, 10008, 10020, 13, NULL, 10172),
 	(10010, 10009, 10001, 6, NULL, 10060),
-	(10011, 10010, 10020, 19, NULL, 10176);
+	(10011, 10010, 10020, 19, NULL, 10176),
+	(10012, 10011, 10028, 1, NULL, 10220),
+	(10013, 10011, 10027, 1, NULL, 10214),
+	(10014, 10012, 10000, 1, NULL, 10054);
 
 -- Dumping data for table shopapp.products: ~30 rows (approximately)
 REPLACE INTO `products` (`id`, `name`, `price`, `description`, `created_at`, `updated_at`, `category_id`) VALUES
@@ -106,7 +111,8 @@ REPLACE INTO `product_images` (`id`, `product_id`, `image_url`) VALUES
 	(10026, 10024, 'd409c3ca-fbb6-4557-ab15-10c9927e5244_122.jpg'),
 	(10027, 10023, '71547c23-3644-4803-a4db-932bfbbea54e_094.jpg'),
 	(10028, 10022, '49b9bf20-1248-42a1-9eea-d4b3f454abf9_046.jpg'),
-	(10029, 10021, '2a5b0fb8-2675-4615-a730-f84a63cf9894_110.jpg');
+	(10029, 10021, '2a5b0fb8-2675-4615-a730-f84a63cf9894_110.jpg'),
+	(10030, 10030, '4932f3cf-39c6-4c26-8243-47590615563e_125.jpg');
 
 -- Dumping data for table shopapp.product_variants: ~183 rows (approximately)
 REPLACE INTO `product_variants` (`id`, `product_id`, `size`, `color`, `stock`) VALUES
@@ -115,7 +121,7 @@ REPLACE INTO `product_variants` (`id`, `product_id`, `size`, `color`, `stock`) V
 	(10051, 10000, 'M', 'Trắng', 100),
 	(10052, 10000, 'S', 'Trắng', 100),
 	(10053, 10000, 'M', 'Trắng', 100),
-	(10054, 10000, 'L', 'Trắng', 100),
+	(10054, 10000, 'L', 'Trắng', 99),
 	(10055, 10000, 'S', 'Đen', 100),
 	(10056, 10000, 'M', 'Đen', 100),
 	(10057, 10000, 'L', 'Đen', 100),
@@ -275,13 +281,13 @@ REPLACE INTO `product_variants` (`id`, `product_id`, `size`, `color`, `stock`) V
 	(10211, 10026, 'S', 'Đen', 100),
 	(10212, 10026, 'M', 'Đen', 100),
 	(10213, 10026, 'L', 'Đen', 100),
-	(10214, 10027, 'S', 'Trắng', 100),
+	(10214, 10027, 'S', 'Trắng', 99),
 	(10215, 10027, 'M', 'Trắng', 100),
 	(10216, 10027, 'L', 'Trắng', 100),
 	(10217, 10027, 'S', 'Đen', 100),
 	(10218, 10027, 'M', 'Đen', 100),
 	(10219, 10027, 'L', 'Đen', 100),
-	(10220, 10028, 'S', 'Trắng', 100),
+	(10220, 10028, 'S', 'Trắng', 99),
 	(10221, 10028, 'M', 'Trắng', 100),
 	(10222, 10028, 'L', 'Trắng', 100),
 	(10223, 10028, 'S', 'Đen', 100),
@@ -302,13 +308,18 @@ REPLACE INTO `roles` (`id`, `name`) VALUES
 
 -- Dumping data for table shopapp.social_accounts: ~0 rows (approximately)
 
--- Dumping data for table shopapp.tokens: ~0 rows (approximately)
+-- Dumping data for table shopapp.tokens: ~1 rows (approximately)
 
--- Dumping data for table shopapp.users: ~1 rows (approximately)
-REPLACE INTO `users` (`id`, `fullname`, `phone_number`, `address`, `password`, `created_at`, `updated_at`, `is_active`, `facebook_account_id`, `google_account_id`, `role_id`) VALUES
+-- Dumping data for table shopapp.users: ~8 rows (approximately)
+REPLACE INTO `users` (`id`, `fullname`, `email`, `address`, `password`, `created_at`, `updated_at`, `is_active`, `facebook_account_id`, `google_account_id`, `role_id`) VALUES
 	(10000, 'dev', '123', 'VietNam', '$2a$10$PlgEyrxTz7NOMRI6SLh65udwD.SLvgiAGc6uowE1dWDa83z7oP6hK', '2024-11-13 21:31:28', '2024-11-13 21:31:28', b'1', NULL, NULL, 10000),
 	(10001, 'user', '000', 'VietNam', '$2a$10$rZ2e6GD8tAXWO9NW4DdkE.p4pkAGoDANaeSbIEfQ4YD56PRTNKY6.', '2024-11-14 20:06:44', '2024-11-14 13:07:22', b'1', NULL, NULL, 10002),
-	(10002, 'user', '111', 'VietNam', '$2a$10$hU230BMkH7lu9i6ltmGVPeVR9JzFeoEvJIeGGmblyZPdK5r.EvdYK', '2024-11-14 20:19:01', '2024-11-14 20:19:01', b'1', NULL, NULL, 10002);
+	(10002, 'user', '111', 'VietNam', '$2a$10$hU230BMkH7lu9i6ltmGVPeVR9JzFeoEvJIeGGmblyZPdK5r.EvdYK', '2024-11-14 20:19:01', '2024-11-14 20:19:01', b'1', NULL, NULL, 10002),
+	(10003, 'user', 'lvt@gmail.com', 'VietNam', '$2a$10$knZWmgfWyJy.BSvqARhRmeNbY0fjRZ3s1dofFAZA2s8.BfRtPIlE.', '2024-11-15 16:34:00', '2024-11-15 16:34:00', b'1', NULL, NULL, 10002),
+	(10004, 'user', '124ugust@gmail.com', 'VietNam', '$2a$10$kJlhwgZ/3dXouowjNSe3xuBISYirhDIYLPppfXVAc4cKSIS8rhOZe', '2024-11-15 17:21:58', '2024-11-15 20:32:42', b'1', NULL, NULL, 10002),
+	(10005, 'user', '1111@gmail.com', 'VietNam', '$2a$10$piZE2Als0TJbYybOyZ6fwOtfNa29oh41EmMOOoRQmyzXzkKVS3dMO', '2024-11-15 19:09:39', '2024-11-15 19:09:39', b'1', NULL, NULL, 10002),
+	(10006, 'user', '11211@gmail.com', 'VietNam', '$2a$10$pDsfu0CWnIIYWbi81/cnounOgrbMgEUtX4cHx5qouKrhY0uyq2VNK', '2024-11-15 19:50:23', '2024-11-15 19:50:23', b'1', NULL, NULL, 10002),
+	(10007, NULL, 'ingame902@gmail.com', NULL, '$2a$10$927FwPZbWF.G0Q1g3/uS.udFiqVk3IDxJYa/DMLcsJGsTG16yNhJG', '2024-11-15 19:53:09', '2024-11-15 19:53:09', b'1', NULL, NULL, 10002);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

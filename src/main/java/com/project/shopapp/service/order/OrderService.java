@@ -82,4 +82,10 @@ public class OrderService implements IOrderService {
     public List<Order> getAllOrders() {
         return (List<Order>) orderRepository.findAll();
     }
+
+    public void updateStatus(Long id, String status) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setStatus(status);
+        orderRepository.save(order);
+    }
 }

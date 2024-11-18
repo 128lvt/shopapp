@@ -32,7 +32,6 @@ public class OrderDetail {
     @Column(name = "number_of_products", nullable = false)
     private Integer numberOfProducts;
 
-
     @ManyToOne
     @JoinColumn(name = "variant_id")
     @JsonManagedReference

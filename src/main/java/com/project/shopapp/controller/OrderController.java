@@ -72,6 +72,16 @@ public class OrderController {
         }
     }
 
+    @PutMapping("/status/{id}")
+    public ResponseEntity<?> updateOrderStatus(@Valid @PathVariable("id") Long id, @RequestParam(value = "status") String status) {
+        try {
+            orderService.updateStatus(id, status);
+            return ResponseEntity.ok().body(Response.success("Chỉnh sửa trạng thái thành công"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Response.error(e.getMessage()));
+        }
+    }
+
     @GetMapping
     public ResponseEntity<?> getAllOrders() {
         return ResponseEntity.ok().body(Response.success(orderService.getAllOrders()));
