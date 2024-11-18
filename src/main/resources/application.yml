@@ -24,7 +24,7 @@ spring:
     #    password: c@BM8pyyr!BBh$z
 
 
-    url: jdbc:mysql://localhost:3308/shopapp?useSSL=false&serverTimeZone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://206.189.42.99:3306/shopapp?useSSL=false&serverTimeZone=UTC&allowPublicKeyRetrieval=true
     username: root
     password: P@ssw0rd
 
