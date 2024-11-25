@@ -26,7 +26,7 @@ spring:
 
     url: jdbc:mysql://206.189.42.99:3306/shopapp?useSSL=false&serverTimeZone=UTC&allowPublicKeyRetrieval=true
     username: root
-    password: P@ssw0rd
+    password:
 
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:

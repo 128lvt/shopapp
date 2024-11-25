@@ -117,7 +117,7 @@ CREATE TABLE `orders` (
                           `order_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                           `status` ENUM('Chờ xác nhận', 'Đang xử lý', 'Đang giao hàng', 'Đã giao hàng', 'Đã hủy')
     DEFAULT 'Chờ xác nhận',
-                          `total_money` DECIMAL(16, 2),
+                          `total_money` DECIMAL(16, 2) NOT NULL ,
                           `shipping_method` VARCHAR(100),
                           `shipping_address` VARCHAR(200),
                           `shipping_date` DATE,
@@ -136,7 +136,6 @@ CREATE TABLE `order_details` (
                                  `order_id` INT NOT NULL,
                                  `product_id` INT NOT NULL,
                                  `number_of_products` INT NOT NULL,
-                                 `total_money` DECIMAL(16, 2) NOT NULL,
                                  `variant_id` INT,
                                  CONSTRAINT `check_number_of_products` CHECK (`number_of_products` > 0),
                                  CONSTRAINT `fk_details_orders` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
@@ -221,7 +220,7 @@ SET GLOBAL time_zone = '+07:00';
 SET time_zone = '+07:00';
 
 -- Grant privileges
-GRANT EVENT ON *.* TO 'root'@'localhost';
+UPDATE mysql.user SET Host = '%' WHERE User = 'root' AND Host = 'localhost';
 FLUSH PRIVILEGES;
 
 -- Enable event
