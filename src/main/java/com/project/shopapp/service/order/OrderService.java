@@ -16,13 +16,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OrderService implements IOrderService {
+public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     /*ModelMapper áp dụng cho đối tượng có nhiều trường giống nhau*/
-    @Override
+
     public Order createOrder(OrderDTO orderDTO) throws Exception {
         /*Kiểm tra user_id có tồn tại hay chưa*/
         User user = userRepository.findById(orderDTO.getUserId()).orElseThrow(() -> new DataNotFoundException("User Not Found"));
@@ -41,16 +41,17 @@ public class OrderService implements IOrderService {
         }
         order.setShippingDate(shippingDate);
         order.setActive(true);
+        if (orderDTO.getPaymentMethod().equalsIgnoreCase("momo")) {
+            order.setPaymentStatus("Chưa thanh toán");
+        }
         orderRepository.save(order);
         return order;
     }
 
-    @Override
     public Order getOrder(Long id) throws DataNotFoundException {
         return orderRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Order not found"));
     }
 
-    @Override
     public Order updateOrder(Long id, OrderDTO orderDTO) throws DataNotFoundException {
         Order order = orderRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Order not found"));
         User existingUser = userRepository.findById(orderDTO.getUserId()).orElseThrow(() -> new DataNotFoundException("User not found"));
@@ -63,7 +64,12 @@ public class OrderService implements IOrderService {
         return orderRepository.save(order);
     }
 
-    @Override
+    public void updatePaymentStatus(Long id, String orderStatus) throws DataNotFoundException {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Order not found"));
+        order.setPaymentStatus(orderStatus);
+        orderRepository.save(order);
+    }
+
     public void deleteOrder(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
         order.setActive(false);
@@ -74,7 +80,6 @@ public class OrderService implements IOrderService {
         orderRepository.deleteById(id);
     }
 
-    @Override
     public List<Order> findByUserId(Long id) {
         return orderRepository.findByUserId(id);
     }

@@ -20,14 +20,14 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService {
+public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
 
-    @Override
+
     public User createUser(UserDTO userDTO) throws Exception {
         String phoneNUmber = userDTO.getEmail();
         //Kiểm tra số điện thoại đ ồn tại hay chưa
@@ -57,7 +57,7 @@ public class UserService implements IUserService {
         return userRepository.save(user);
     }
 
-    @Override
+
     public Object login(String email, String password) throws DataNotFoundException {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new DataNotFoundException("User not found"));
 
@@ -72,6 +72,7 @@ public class UserService implements IUserService {
         Map<String, Object> response = new HashMap<>();
         response.put("token", jwtTokenUtil.generateToken(user));
         response.put("user", user);
+        response.put("role", user.getRole());
 
         return response;
     }
@@ -86,5 +87,5 @@ public class UserService implements IUserService {
         userRepository.save(user);
     }
 
-    
+
 }

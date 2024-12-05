@@ -21,12 +21,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService implements IProductService {
+public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductImageRepository productImageRepository;
 
-    @Override
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException {
         Category category = categoryRepository.findById(productDTO.getCategoryId()).orElseThrow(() -> new DataNotFoundException("Cannot find category with id: " + productDTO.getCategoryId()));
         Product product = Product.builder()
@@ -40,7 +39,6 @@ public class ProductService implements IProductService {
     }
 
 
-    @Override
     public Product getProduct(Long id) throws DataNotFoundException {
         //Find by id tra ve kieu optional
         return productRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Cannot find product with id: " + id));
@@ -63,13 +61,12 @@ public class ProductService implements IProductService {
     }
 
 
-    @Override
     public List<Product> getAllProducts() {
         //Lấy danh sách sản paharm theo trang (page) giới hạn (limit)
         return productRepository.findAll();
     }
 
-    @Override
+
     public Product updateProduct(Long id, ProductDTO productDTO) throws DataNotFoundException {
         Product product = getProduct(id); //getProduct đã có exception
         if (product != null) {
@@ -84,13 +81,13 @@ public class ProductService implements IProductService {
         return null;
     }
 
-    @Override
+
     public void deleteProduct(Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
         productOptional.ifPresent(productRepository::delete);
     }
 
-    @Override
+
     public ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO) throws DataNotFoundException, InvalidParamException {
         Product product = productRepository.findById(productId).orElseThrow(() -> new DataNotFoundException("Cannot find product with id: " + productId));
         ProductImage productImage = ProductImage.builder()
@@ -105,7 +102,7 @@ public class ProductService implements IProductService {
         return productImageRepository.save(productImage);
     }
 
-    @Override
+
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }
@@ -118,6 +115,6 @@ public class ProductService implements IProductService {
         productImage.setImageUrl(productImage.getImageUrl());
         productImageRepository.save(productImage);
     }
-    
+
 
 }

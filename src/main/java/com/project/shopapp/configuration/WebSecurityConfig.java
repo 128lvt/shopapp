@@ -32,7 +32,8 @@ public class WebSecurityConfig {
                                 String.format("%s/users/register", apiPrefix),
                                 String.format("%s/users/login", apiPrefix),
                                 String.format("%s/users/token", apiPrefix),
-                                String.format("%s/users/forgot-password", apiPrefix)
+                                String.format("%s/users/forgot-password", apiPrefix),
+                                String.format("%s/payments/momo/callback", apiPrefix)
                         )
                         .permitAll()
                         .requestMatchers(HttpMethod.GET,

@@ -15,11 +15,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class VariantService implements IVariantService {
+public class VariantService {
     private final ProductVariantRepository productVariantRepository;
     private final ProductService productService;
 
-    @Override
     public ProductVariant create(ProductVariantDTO productVariantDTO) throws DataNotFoundException {
         Product product = productService.getProduct(productVariantDTO.getProductId());
         ModelMapper modelMapper = new ModelMapper();

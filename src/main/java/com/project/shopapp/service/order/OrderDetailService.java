@@ -17,13 +17,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OrderDetailService implements IOrderDetailService {
+public class OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final ProductVariantRepository productVariantRepository;
 
-    @Override
     public OrderDetail createOrderDetail(OrderDetailDTO orderDetailDTO) throws DataNotFoundException {
         Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElseThrow(() -> new DataNotFoundException("Order not found"));
         Product product = productRepository.findById(orderDetailDTO.getProductId()).orElseThrow(() -> new DataNotFoundException("Product not found"));
@@ -39,7 +38,6 @@ public class OrderDetailService implements IOrderDetailService {
         return orderDetailRepository.save(orderDetail);
     }
 
-    @Override
     public OrderDetail updateOrderDetail(Long id, OrderDetailDTO orderDetailDTO) throws DataNotFoundException {
         OrderDetail orderDetail = orderDetailRepository.findById(id).orElseThrow(() -> new DataNotFoundException("OrderDetail not found"));
         Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElseThrow(() -> new DataNotFoundException("Order not found"));
@@ -54,23 +52,19 @@ public class OrderDetailService implements IOrderDetailService {
         return orderDetailRepository.save(orderDetail);
     }
 
-    @Override
     public OrderDetail getOrderDetail(Long id) throws DataNotFoundException {
         return orderDetailRepository.findById(id).orElseThrow(() -> new DataNotFoundException("OrderDetail not found"));
     }
 
-    @Override
     public void deleteOrderDetail(Long id) throws DataNotFoundException {
         OrderDetail orderDetail = orderDetailRepository.findById(id).orElseThrow(() -> new DataNotFoundException("OrderDetail not found"));
         orderDetailRepository.deleteById(id);
     }
 
-    @Override
     public List<OrderDetail> getOrderDetails() {
         return orderDetailRepository.findAll();
     }
 
-    @Override
     public List<OrderDetail> findByOrderId(Long orderId) throws DataNotFoundException {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new DataNotFoundException("Order not found"));
         return orderDetailRepository.findByOrderId(orderId);

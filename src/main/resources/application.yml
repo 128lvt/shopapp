@@ -19,14 +19,12 @@ spring:
           starttls:
             enable: true
   datasource:
-    #    url: jdbc:mysql://sql.freedb.tech:3306/freedb_productdb?useSSL=false&serverTimeZone=UTC&allowPublicKeyRetrieval=true
-    #    username: freedb_user000000
-    #    password: c@BM8pyyr!BBh$z
-
-
-    url: jdbc:mysql://206.189.42.99:3306/shopapp?useSSL=false&serverTimeZone=UTC&allowPublicKeyRetrieval=true
+    #    url: jdbc:mysql://localhost:3308/shopapp?useSSL=false&serverTimeZone=UTC&allowPublicKeyRetrieval=true
     username: root
-    password:
+    #    password: P@ssw0rd
+    password: ${DB_PASSWORD}    #    password: c@BM8pyyr!BBh$z
+    url: jdbc:mysql://${IP_MYSQL}:3306/${DB_NAME}?useSSL=false&serverTimeZone=UTC&allowPublicKeyRetrieval=true
+    #    username: ${DB_USER}
 
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
@@ -46,7 +44,6 @@ api:
 jwt:
   expiration: 259200 #30 ngay
   secret_key: mlfpofQBNxVBBxFi2tWyB8CU6jbSR9HM
-cors:
-  allowed:
-    origins: "http://localhost:3000,http://locahost:3001"
 
+returnUrl: http://localhost:3000/momo/callback
+notifyUrl: http://localhost:8443/api/v1/payments/momo/callback

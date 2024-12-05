@@ -79,7 +79,7 @@ public class UserController {
                     return ResponseEntity.ok().body(Response.success("Xác nhận mật khẩu thành công. "));
                 }
             }
-            return ResponseEntity.ok().body(Response.error("Token không hợp lệ. "));
+            return ResponseEntity.badRequest().body(Response.error("Token không hợp lệ. "));
         } catch (DataNotFoundException e) {
             return ResponseEntity.badRequest().body(Response.error(e.getMessage()));
         }
