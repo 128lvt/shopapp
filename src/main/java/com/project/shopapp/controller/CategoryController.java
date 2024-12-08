@@ -19,8 +19,6 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    //@Valid để validate dữ liệu
-    //<?> Có thể vừa nhận String và List<String>
     public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
         try {
             Category category = categoryService.createCategory(categoryDTO);

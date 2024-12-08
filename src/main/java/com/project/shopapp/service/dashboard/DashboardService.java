@@ -31,6 +31,7 @@ public class DashboardService {
     }
 
     public List<OutOfStock> getOutOfStockProducts(Integer stock) {
+        //Dung function co san cua jpa
         List<ProductVariant> productVariants = productVariantRepository.findByStockLessThan(stock);
         return productVariants.stream()
                 .map(productVariant -> OutOfStock.getOutOfStock(productVariant.getProduct(), productVariant))

@@ -17,6 +17,7 @@ public class CategoryService {
         Category category = Category.builder()
                 .name(categoryDTO.getName())
                 .build();
+        //Luu vao database
         return categoryRepository.save(category);
     }
 
@@ -32,8 +33,10 @@ public class CategoryService {
 
 
     public void updateCategory(Long id, CategoryDTO categoryDTO) {
+        //Tim category
         Category existingCategory = getCategoryById(id);
         existingCategory.setName(categoryDTO.getName());
+        //Luu vao database
         categoryRepository.save(existingCategory);
     }
 

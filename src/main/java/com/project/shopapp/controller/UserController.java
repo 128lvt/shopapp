@@ -28,9 +28,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO) {
         try {
+            //Kiểm tra mật khẩu nhập lại có giống không
             if (!userDTO.getPassword().equals(userDTO.getRetypePassword())) {
-                return ResponseEntity.badRequest().body("Password does not match");
+                return ResponseEntity.badRequest().body("Mật khẩu không giống nhau.");
             }
+            //Gọi function createUser nếu không có lỗi
             return ResponseEntity.ok().body(Response.success(userService.createUser(userDTO)));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Response.error(e.getMessage()));
@@ -39,9 +41,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
-        //Kiểm tra thông tin đăng nhập và sinh token
-        //Trả về token trong response
         try {
+            //Gọi function login
             Object response = userService.login(userLoginDTO.getEmail(), userLoginDTO.getPassword());
             return ResponseEntity.ok().body(Response.success(response));
         } catch (Exception e) {
@@ -52,34 +53,40 @@ public class UserController {
     @GetMapping("/token")
     public ResponseEntity<?> generateToken(@Valid @RequestParam String email) {
         try {
+            //Kiem tra email ton tai chua
             if (tokenService.findByUserEmail(email) != null) {
-                return ResponseEntity.badRequest().body(Response.success("Token đã được gửi đến email của bạn, vui lòng không SPAM"));
+                return ResponseEntity.badRequest().body(Response.success("Token đã được gửi đến email của bạn, vui lòng không SPAM."));
             }
+            //Kiem tra email co ton tai hay chua
             User user = userService.findByEmail(email);
+
             String token = tokenService.createToken(user);
-            return ResponseEntity.ok().body(Response.success("Token đã được gửi qua email. "));
-        } catch (DataNotFoundException e) {
-            return ResponseEntity.badRequest().body(Response.error("Email không tồn tại. "));
+            return ResponseEntity.ok().body(Response.success("Token đã được gửi qua email."));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Response.error(e.getMessage()));
         }
     }
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> getToken(@Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO) throws DataNotFoundException {
         if (!Objects.equals(forgotPasswordDTO.getPassword(), forgotPasswordDTO.getRetypePassword())) {
-            return ResponseEntity.badRequest().body("Password does not match");
+            return ResponseEntity.badRequest().body("Mật khẩu không giống nhau.");
         }
         try {
+            //Kiem tra token da ton tai hay chua
             Token existingToken = tokenService.findByToken(forgotPasswordDTO.getToken());
+
             boolean isTokenValid = tokenService.isTokenValid(forgotPasswordDTO.getToken());
             if (existingToken != null && isTokenValid) {
                 User user = existingToken.getUser();
                 if (forgotPasswordDTO.getEmail().equals(user.getEmail())) {
                     userService.setPassword(forgotPasswordDTO.getEmail(), forgotPasswordDTO.getPassword());
+                    //Xoa token trong database
                     tokenService.delete(existingToken);
-                    return ResponseEntity.ok().body(Response.success("Xác nhận mật khẩu thành công. "));
+                    return ResponseEntity.ok().body(Response.success("Xác nhận mật khẩu thành công."));
                 }
             }
-            return ResponseEntity.badRequest().body(Response.error("Token không hợp lệ. "));
+            return ResponseEntity.badRequest().body(Response.error("Token không hợp lệ."));
         } catch (DataNotFoundException e) {
             return ResponseEntity.badRequest().body(Response.error(e.getMessage()));
         }

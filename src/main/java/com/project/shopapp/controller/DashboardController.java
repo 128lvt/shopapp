@@ -31,6 +31,7 @@ public class DashboardController {
 
     @GetMapping("/out-of-stock")
     public List<OutOfStock> getOutOfStock() {
+        //Truyen so luong toi thieu
         return dashboardService.getOutOfStockProducts(5);
     }
 }

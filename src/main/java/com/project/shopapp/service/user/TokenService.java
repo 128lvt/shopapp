@@ -30,6 +30,7 @@ public class TokenService {
         token.setUser(user);
         token.setExpirationDate(LocalDateTime.now().plusMinutes(10));
 
+        //Tao email xong goi function sendEmail trong EmailService de gui mail
         String emailBody = "Chào " + user.getUsername() + ",\n\n" +
                 "Đây là token của bạn: " + generatedToken + "\n" +
                 "Token này sẽ hết hạn sau 10 phút.\n\n" +

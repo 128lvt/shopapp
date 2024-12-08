@@ -27,13 +27,16 @@ public class ProductService {
     private final ProductImageRepository productImageRepository;
 
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException {
+        //Tim category co ton tai hay khong
         Category category = categoryRepository.findById(productDTO.getCategoryId()).orElseThrow(() -> new DataNotFoundException("Cannot find category with id: " + productDTO.getCategoryId()));
+
         Product product = Product.builder()
                 .name(productDTO.getName())
                 .category(category)
                 .price(productDTO.getPrice())
                 .description(productDTO.getDescription())
                 .build();
+        //Luu vao database
         productRepository.save(product);
         return product;
     }
@@ -56,6 +59,7 @@ public class ProductService {
             assert sortOrder != null;
             sort = sortOrder.equalsIgnoreCase("desc") ? Sort.by("price").descending() : Sort.by("price").ascending();
         }
+
         PageRequest pageRequest = PageRequest.of(page, limit, sort);
         return productRepository.findProductsByFilters(name, minPrice, maxPrice, description, categoryIds, pageRequest);
     }
@@ -68,14 +72,17 @@ public class ProductService {
 
 
     public Product updateProduct(Long id, ProductDTO productDTO) throws DataNotFoundException {
+        //Kiem tra product da ton tai trong db hay chua
         Product product = getProduct(id); //getProduct đã có exception
         if (product != null) {
             //ModelMapper
+            //Tim category
             Category category = categoryRepository.findById(productDTO.getCategoryId()).orElseThrow(() -> new DataNotFoundException("Cannot find category with id: " + productDTO.getCategoryId()));
             product.setName(productDTO.getName());
             product.setCategory(category);
             product.setPrice(productDTO.getPrice());
             product.setDescription(productDTO.getDescription());
+            //Luu database
             return productRepository.save(product);
         }
         return null;
@@ -83,12 +90,14 @@ public class ProductService {
 
 
     public void deleteProduct(Long id) {
+        //Tim san pham theo ID
         Optional<Product> productOptional = productRepository.findById(id);
         productOptional.ifPresent(productRepository::delete);
     }
 
 
     public ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO) throws DataNotFoundException, InvalidParamException {
+        //Tim productId
         Product product = productRepository.findById(productId).orElseThrow(() -> new DataNotFoundException("Cannot find product with id: " + productId));
         ProductImage productImage = ProductImage.builder()
                 .product(product)
@@ -99,6 +108,7 @@ public class ProductService {
         if (size >= ProductImage.MAXIMUM_IMAGE_PER_PRODUCT) {
             throw new InvalidParamException("Number of product's image must be <= " + ProductImage.MAXIMUM_IMAGE_PER_PRODUCT);
         }
+        //Luu product image's name vao database
         return productImageRepository.save(productImage);
     }
 

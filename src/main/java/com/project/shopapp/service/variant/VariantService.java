@@ -20,11 +20,15 @@ public class VariantService {
     private final ProductService productService;
 
     public ProductVariant create(ProductVariantDTO productVariantDTO) throws DataNotFoundException {
+        //Lay productId
         Product product = productService.getProduct(productVariantDTO.getProductId());
+
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.typeMap(ProductVariantDTO.class, ProductVariant.class).addMappings(mapper -> mapper.skip(ProductVariant::setId));
         ProductVariant productVariant = new ProductVariant();
         modelMapper.map(productVariantDTO, productVariant);
+
+        //Luu database
         return productVariantRepository.save(productVariant);
     }
 
@@ -35,11 +39,15 @@ public class VariantService {
     }
 
     public ProductVariant update(Long variantId, ProductVariantDTO productVariantDTO) throws DataNotFoundException {
+        //Tim productVariant
         ProductVariant variant = productVariantRepository.findById(variantId).orElseThrow(() -> new DataNotFoundException("Variant not found"));
+        
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.typeMap(ProductVariantDTO.class, ProductVariant.class)
                 .addMappings(mapper -> mapper.skip(ProductVariant::setId));
         modelMapper.map(productVariantDTO, variant);
+
+        //Luu vao database
         return productVariantRepository.save(variant);
     }
 

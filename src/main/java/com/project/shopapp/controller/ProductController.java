@@ -43,15 +43,6 @@ public class ProductController {
     private final VariantService variantService;
 
     @PostMapping
-    //@Valid để validate dữ liệu
-    //<?> Có thể vừa nhận String và List<String>
-    /*{
-        "name": "IPad Pro 2023",
-            "price": 812.34,
-            "thumbnail": "",
-            "description": "This is a test",
-            "category_id": 1
-    }*/
     public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDTO productDTO) throws DataNotFoundException {
         try {
             return ResponseEntity.ok().body(Response
@@ -73,6 +64,7 @@ public class ProductController {
     @PostMapping("/variant")
     public ResponseEntity<?> createProductVariant(@Valid @RequestBody ProductVariantDTO productVariantDTO) throws Exception {
         try {
+            //Kiem tra size, color da ton tai chua
             if (variantService.existsVariant(productVariantDTO.getProductId(), productVariantDTO.getColor(), productVariantDTO.getSize())) {
                 return ResponseEntity.badRequest().body(Response.error("Color, size đã tồn tại"));
             } else {
@@ -220,11 +212,6 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<?> getProducts() {
-//        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdAt").ascending());
-//        Page<Product> productPage = productService.getAllProducts(pageRequest);
-//        int totalPages = productPage.getTotalPages();
-//        List<Product> products = productPage.getContent();
-//        return ResponseEntity.ok().body(Response.success(ProductResponse.builder().products(products).totalPages(totalPages).build()));
         return ResponseEntity.ok().body(Response.success(productService.getAllProducts()));
 
     }
@@ -248,9 +235,11 @@ public class ProductController {
             categoryIds = null;
         }
 
+        //Phan trang
         Page<Product> productPage = productService.searchProducts(name, minPrice, maxPrice, description, categoryIds, sortOrder, page, limit);
         int totalPages = productPage.getTotalPages();
         List<Product> products = productPage.getContent();
+        
         return ResponseEntity.ok().body(Response.success(ProductResponse.builder().products(products).totalPages(totalPages).build()));
     }
 
@@ -269,6 +258,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable("id") Long productId, @RequestBody ProductDTO productDTO) throws DataNotFoundException {
+        //Goi function updateProduct ben ProductService
         Product product = productService.updateProduct(productId, productDTO);
         return ResponseEntity.ok().body(Response.success(product));
     }
