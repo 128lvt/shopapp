@@ -81,11 +81,11 @@ public class OrderService {
     }
 
     public List<Order> findByUserId(Long id) {
-        return orderRepository.findByUserId(id);
+        return orderRepository.findByUserIdOrderByOrderDateDesc(id);
     }
 
     public List<Order> getAllOrders() {
-        return (List<Order>) orderRepository.findAll();
+        return orderRepository.findAllByOrderByIdDesc();
     }
 
     public void updateStatus(Long id, String status) {

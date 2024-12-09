@@ -24,8 +24,11 @@ public class OrderDetailService {
     private final ProductVariantRepository productVariantRepository;
 
     public OrderDetail createOrderDetail(OrderDetailDTO orderDetailDTO) throws DataNotFoundException {
+        //Tim order
         Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElseThrow(() -> new DataNotFoundException("Order not found"));
+        //Tim product
         Product product = productRepository.findById(orderDetailDTO.getProductId()).orElseThrow(() -> new DataNotFoundException("Product not found"));
+        //Tim size, color
         ProductVariant productVariant = productVariantRepository.findById(orderDetailDTO.getVariantId()).orElseThrow(() -> new DataNotFoundException("Product variant not found"));
 
         OrderDetail orderDetail = OrderDetail
@@ -35,6 +38,8 @@ public class OrderDetailService {
                 .numberOfProducts(orderDetailDTO.getNumberOfProducts())
                 .productVariant(productVariant)
                 .build();
+
+        //Luu vao database
         return orderDetailRepository.save(orderDetail);
     }
 

@@ -36,20 +36,13 @@ public class UserService {
         }
 
         //Build User từ DTO
-        User user = User.builder()
-                .fullName(userDTO.getFullName())
-                .email(userDTO.getEmail())
-                .password(userDTO.getPassword())
-                .address(userDTO.getAddress())
-                .facebookAccountId(userDTO.getFacebookAccountId())
-                .googleAccountId(userDTO.getGoogleAccountId())
-                .build();
+        User user = User.builder().fullName(userDTO.getFullName()).email(userDTO.getEmail()).password(userDTO.getPassword()).address(userDTO.getAddress()).facebookAccountId(userDTO.getFacebookAccountId()).googleAccountId(userDTO.getGoogleAccountId()).build();
 
         //Mã hóa mật khẩu
         String password = userDTO.getPassword();
         String encodePassword = passwordEncoder.encode(password);
         user.setPassword(encodePassword);
-        
+
         //Set role và trạng thái
         Role role = roleRepository.findByName("user");
         user.setRole(role);
@@ -65,7 +58,7 @@ public class UserService {
 
         //Kiểm tra mật khẩu
         if (!passwordEncoder.matches(password, user.getPassword())) {
-                throw new BadCredentialsException("Mật khẩu không đúng.");
+            throw new BadCredentialsException("Mật khẩu không đúng.");
         }
 
         //Xác thực người dùng với Spring Security
@@ -73,9 +66,11 @@ public class UserService {
 
         //Trả về token, thông tin User, Role
         Map<String, Object> response = new HashMap<>();
-        response.put("token", jwtTokenUtil.generateToken(user));
         response.put("user", user);
         response.put("role", user.getRole());
+
+        //Tao token
+        response.put("token", jwtTokenUtil.generateToken(user));
 
         return response;
     }
@@ -89,6 +84,4 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
-
-
 }

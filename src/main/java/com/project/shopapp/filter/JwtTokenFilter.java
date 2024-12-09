@@ -34,6 +34,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
+            //Cho di qua cac API khong can xac thuc token, khong can dang nhap
             if (isBypassToken(request)) {
                 filterChain.doFilter(request, response);
                 return;
@@ -63,6 +64,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
     }
 
+    //Khong can dang nhap
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = List.of(
                 Pair.of(String.format("%s/products", apiPrefix), "GET"),

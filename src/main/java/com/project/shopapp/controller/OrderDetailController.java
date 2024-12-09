@@ -26,10 +26,12 @@ public class OrderDetailController {
     @PostMapping
     public ResponseEntity<?> createOrderDetail(@Valid @RequestBody OrderDetailDTO orderDetailDTO) throws DataNotFoundException {
         try {
+            //Lay size cua product
             ProductVariant productVariant = variantService.getVariant(orderDetailDTO.getVariantId());
+            //Kiem tra so luong trong kho
             if (productVariant.getStock() < orderDetailDTO.getNumberOfProducts()) {
                 orderService.hardDelete(orderDetailDTO.getOrderId());
-                return ResponseEntity.badRequest().body(Response.error("Số lượng sản phẩm vượt quá số lượng trong kho"));
+                return ResponseEntity.badRequest().body(Response.error("Số lượng sản phẩm vượt quá số lượng trong kho."));
             }
             OrderDetail orderDetail = orderDetailService.createOrderDetail(orderDetailDTO);
             return ResponseEntity.ok().body(Response.success(orderDetail));
