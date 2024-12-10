@@ -80,8 +80,11 @@ public class UserService {
     }
 
     public void setPassword(String email, String password) throws DataNotFoundException {
+        //Tìm user bằng email
         User user = userRepository.findByEmail(email).orElseThrow(() -> new DataNotFoundException("Email chưa được đăng ký."));
+        //Đặt mật khẩu mới 
         user.setPassword(passwordEncoder.encode(password));
+        //Lưu vào database
         userRepository.save(user);
     }
 }

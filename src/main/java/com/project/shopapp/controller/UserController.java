@@ -57,7 +57,7 @@ public class UserController {
             if (tokenService.findByUserEmail(email) != null) {
                 return ResponseEntity.badRequest().body(Response.success("Token đã được gửi đến email của bạn, vui lòng không SPAM."));
             }
-            //Kiem tra email co ton tai hay chua
+            
             User user = userService.findByEmail(email);
 
             String token = tokenService.createToken(user);
