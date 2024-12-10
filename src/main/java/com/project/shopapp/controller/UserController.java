@@ -80,6 +80,7 @@ public class UserController {
             if (existingToken != null && isTokenValid) {
                 User user = existingToken.getUser();
                 if (forgotPasswordDTO.getEmail().equals(user.getEmail())) {
+                    //Set password cho user
                     userService.setPassword(forgotPasswordDTO.getEmail(), forgotPasswordDTO.getPassword());
                     //Xoa token trong database
                     tokenService.delete(existingToken);

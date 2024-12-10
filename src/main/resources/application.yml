@@ -46,4 +46,4 @@ jwt:
   secret_key: mlfpofQBNxVBBxFi2tWyB8CU6jbSR9HM
 
 returnUrl: http://localhost:3000/momo/callback
-notifyUrl: http://localhost:3000/api/v1/payments/momo/callback
+notifyUrl: http://bombom.id.vn:3000/api/v1/payments/momo/callback
