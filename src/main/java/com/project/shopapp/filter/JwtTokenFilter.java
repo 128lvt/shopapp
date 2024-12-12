@@ -45,9 +45,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
 
+            //Lấy ra token từ header
             final String token = authHeader.substring(7);
             final String email = jwtTokenUtil.extractEmail(token);
 
+            //Đoạn này là giải mã token và lấy thông tin của user, role (authorities)
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User userDetails = (User) userDetailsService.loadUserByUsername(email);
                 if (jwtTokenUtil.validateToken(token, userDetails)) {

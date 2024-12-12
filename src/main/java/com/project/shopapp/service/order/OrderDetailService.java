@@ -25,12 +25,13 @@ public class OrderDetailService {
 
     public OrderDetail createOrderDetail(OrderDetailDTO orderDetailDTO) throws DataNotFoundException {
         //Tim order
-        Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElseThrow(() -> new DataNotFoundException("Order not found"));
+        Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElseThrow(() -> new DataNotFoundException("Không tìm thấy Order."));
         //Tim product
-        Product product = productRepository.findById(orderDetailDTO.getProductId()).orElseThrow(() -> new DataNotFoundException("Product not found"));
+        Product product = productRepository.findById(orderDetailDTO.getProductId()).orElseThrow(() -> new DataNotFoundException("Không tìm thấy Product."));
         //Tim size, color
-        ProductVariant productVariant = productVariantRepository.findById(orderDetailDTO.getVariantId()).orElseThrow(() -> new DataNotFoundException("Product variant not found"));
+        ProductVariant productVariant = productVariantRepository.findById(orderDetailDTO.getVariantId()).orElseThrow(() -> new DataNotFoundException("Không tìm thấy size, color."));
 
+        //Tạo orderDetail
         OrderDetail orderDetail = OrderDetail
                 .builder()
                 .order(order)

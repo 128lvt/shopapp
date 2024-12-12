@@ -67,7 +67,7 @@ public class VariantService {
     }
 
     public ProductVariant getVariant(Long variantId) {
-        return productVariantRepository.findById(variantId).orElseThrow(() -> new DateTimeException("Variant not found"));
+        return productVariantRepository.findById(variantId).orElseThrow(() -> new DateTimeException("Không tìm thấy size, color."));
     }
 
 }

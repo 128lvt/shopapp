@@ -25,8 +25,11 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                //tắt csrf
                 .csrf(AbstractHttpConfigurer::disable)
+                //bật xác thực bằng token
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                //phân quyền
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(
                                 String.format("%s/users/register", apiPrefix),
@@ -35,7 +38,9 @@ public class WebSecurityConfig {
                                 String.format("%s/users/forgot-password", apiPrefix),
                                 String.format("%s/payments/momo/callback", apiPrefix)
                         )
+                        //permitAll -> những endpoint ở trên không cần quyền vẫn truy cập được
                         .permitAll()
+                        //các endpoint bên dưới phải có quyền mới truy cập được
                         .requestMatchers(HttpMethod.GET,
                                 String.format("%s/dashboard/**", apiPrefix)).hasAnyRole(Role.ADMIN, Role.DEV)
 
@@ -95,7 +100,6 @@ public class WebSecurityConfig {
 
                         .anyRequest().hasAnyRole(Role.DEV, Role.ADMIN, Role.USER)
                 );
-
         return http.build();
     }
 }
