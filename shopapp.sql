@@ -51,21 +51,6 @@ CREATE TABLE `tokens`
 
 ALTER TABLE `tokens` AUTO_INCREMENT = 10000;
 
--- Bảng social_accounts
-CREATE TABLE `social_accounts`
-(
-    `id`          INT PRIMARY KEY AUTO_INCREMENT,
-    `provider`    VARCHAR(20)  NOT NULL COMMENT 'Tên nhà social network',
-    `provider_id` VARCHAR(50)  NOT NULL,
-    `email`       VARCHAR(150) NOT NULL COMMENT 'Email tài khoản',
-    `name`        VARCHAR(150) NOT NULL COMMENT 'Tên Người dùng',
-    `user_id`     INT,
-    CONSTRAINT `fk_social_accounts_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-    UNIQUE INDEX `idx_provider_id` (`provider_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
-
-ALTER TABLE `social_accounts` AUTO_INCREMENT = 10000;
-
 -- Bảng categories
 CREATE TABLE `categories`
 (
@@ -203,16 +188,26 @@ FROM `tokens`
 WHERE `expiration_date` < NOW();
 
 -- View thống kê
-CREATE
-OR REPLACE VIEW `top_selling_products_monthly` AS
+CREATE OR REPLACE VIEW `top_selling_products_monthly` AS
 SELECT
-    YEAR (`o`.`order_date`) AS `year`, SUM (IF(MONTH (`o`.`order_date`) = 1, `od`.`number_of_products`, 0)) AS January, SUM (IF(MONTH (`o`.`order_date`) = 2, `od`.`number_of_products`, 0)) AS February, SUM (IF(MONTH (`o`.`order_date`) = 3, `od`.`number_of_products`, 0)) AS March, SUM (IF(MONTH (`o`.`order_date`) = 4, `od`.`number_of_products`, 0)) AS April, SUM (IF(MONTH (`o`.`order_date`) = 5, `od`.`number_of_products`, 0)) AS May, SUM (IF(MONTH (`o`.`order_date`) = 6, `od`.`number_of_products`, 0)) AS June, SUM (IF(MONTH (`o`.`order_date`) = 7, `od`.`number_of_products`, 0)) AS July, SUM (IF(MONTH (`o`.`order_date`) = 8, `od`.`number_of_products`, 0)) AS August, SUM (IF(MONTH (`o`.`order_date`) = 9, `od`.`number_of_products`, 0)) AS September, SUM (IF(MONTH (`o`.`order_date`) = 10, `od`.`number_of_products`, 0)) AS October, SUM (IF(MONTH (`o`.`order_date`) = 11, `od`.`number_of_products`, 0)) AS November, SUM (IF(MONTH (`o`.`order_date`) = 12, `od`.`number_of_products`, 0)) AS December
-FROM `order_details` `od`
-    JOIN `orders` `o`
-ON `od`.`order_id` = `o`.`id`
-WHERE YEAR (`o`.`order_date`) = YEAR (CURRENT_DATE)
-GROUP BY YEAR (`o`.`order_date`)
-ORDER BY YEAR (`o`.`order_date`);
+    YEAR(o.order_date) AS `year`,
+    SUM(CASE WHEN MONTH(o.order_date) = 1 THEN od.number_of_products ELSE 0 END) AS January,
+    SUM(CASE WHEN MONTH(o.order_date) = 2 THEN od.number_of_products ELSE 0 END) AS February,
+    SUM(CASE WHEN MONTH(o.order_date) = 3 THEN od.number_of_products ELSE 0 END) AS March,
+    SUM(CASE WHEN MONTH(o.order_date) = 4 THEN od.number_of_products ELSE 0 END) AS April,
+    SUM(CASE WHEN MONTH(o.order_date) = 5 THEN od.number_of_products ELSE 0 END) AS May,
+    SUM(CASE WHEN MONTH(o.order_date) = 6 THEN od.number_of_products ELSE 0 END) AS June,
+    SUM(CASE WHEN MONTH(o.order_date) = 7 THEN od.number_of_products ELSE 0 END) AS July,
+    SUM(CASE WHEN MONTH(o.order_date) = 8 THEN od.number_of_products ELSE 0 END) AS August,
+    SUM(CASE WHEN MONTH(o.order_date) = 9 THEN od.number_of_products ELSE 0 END) AS September,
+    SUM(CASE WHEN MONTH(o.order_date) = 10 THEN od.number_of_products ELSE 0 END) AS October,
+    SUM(CASE WHEN MONTH(o.order_date) = 11 THEN od.number_of_products ELSE 0 END) AS November,
+    SUM(CASE WHEN MONTH(o.order_date) = 12 THEN od.number_of_products ELSE 0 END) AS December
+FROM `order_details` od
+    JOIN `orders` o ON od.order_id = o.id
+WHERE YEAR(o.order_date) = YEAR(CURRENT_DATE)
+GROUP BY YEAR(o.order_date)
+ORDER BY YEAR(o.order_date);
 
 CREATE
 OR REPLACE VIEW `top_selling_categories` AS
@@ -233,14 +228,6 @@ SET
 GLOBAL time_zone = '+07:00';
 SET
 time_zone = '+07:00';
-
--- Grant privileges
-UPDATE mysql.user
-SET Host = '%'
-WHERE User = 'root'
-  AND Host = 'localhost';
-FLUSH
-PRIVILEGES;
 
 -- Enable event
 ALTER

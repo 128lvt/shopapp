@@ -36,13 +36,12 @@ public class WebSecurityConfig {
                                 String.format("%s/users/login", apiPrefix),
                                 String.format("%s/users/token", apiPrefix),
                                 String.format("%s/users/forgot-password", apiPrefix),
-                                String.format("%s/payments/momo/callback", apiPrefix)
+                                String.format("%s/payments/momo/callback", apiPrefix),
+                                String.format("%s/dashboard/**", apiPrefix)
                         )
                         //permitAll -> những endpoint ở trên không cần quyền vẫn truy cập được
                         .permitAll()
                         //các endpoint bên dưới phải có quyền mới truy cập được
-                        .requestMatchers(HttpMethod.GET,
-                                String.format("%s/dashboard/**", apiPrefix)).hasAnyRole(Role.ADMIN, Role.DEV)
 
                         .requestMatchers(HttpMethod.POST,
                                 String.format("%s/categories/**", apiPrefix)).hasAnyRole(Role.ADMIN, Role.DEV)
