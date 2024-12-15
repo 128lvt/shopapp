@@ -17,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -65,7 +64,6 @@ public class ProductService {
 
 
     public List<Product> getAllProducts() {
-        //Lấy danh sách sản paharm theo trang (page) giới hạn (limit)
         return productRepository.findAll();
     }
 
@@ -88,10 +86,11 @@ public class ProductService {
     }
 
 
-    public void deleteProduct(Long id) {
+    public void deleteProduct(Long id) throws DataNotFoundException {
         //Tim san pham theo ID
-        Optional<Product> productOptional = productRepository.findById(id);
-        productOptional.ifPresent(productRepository::delete);
+        Product product = getProduct(id);
+        product.setActive(false);
+        productRepository.save(product);
     }
 
 

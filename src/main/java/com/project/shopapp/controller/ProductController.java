@@ -267,7 +267,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long productId) {
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long productId) throws DataNotFoundException {
         productService.deleteProduct(productId);
         return ResponseEntity.ok("delete id=" + productId);
     }
