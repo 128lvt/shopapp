@@ -41,11 +41,12 @@ public class PaymentController {
         try {
             Order order = orderService.createOrder(orderDTO);
 
-            String requestId = "";
             String id = order.getId().toString();
             String orderId = "";
-            Long transId = 2L;
             Long amount = (long) order.getTotalMoney().floatValue();
+
+            String requestId = "";
+            Long transId = 2L;
 
             String partnerClientId = "partnerClientId";
             String orderInfo = "Pay With MoMo";
@@ -66,7 +67,19 @@ public class PaymentController {
 
             requestId = String.valueOf(System.currentTimeMillis());
             orderId = id + String.valueOf(System.currentTimeMillis());
-            PaymentResponse captureCreditMoMoResponse = CreateOrderMoMo.process(environment, orderId, requestId, Long.toString(amount), orderInfo, returnURL, notifyURL, "", RequestType.PAY_WITH_CREDIT, Boolean.TRUE);
+            PaymentResponse captureCreditMoMoResponse = CreateOrderMoMo
+                    .process(
+                            environment,
+                            orderId,
+                            requestId,
+                            Long.toString(amount),
+                            orderInfo,
+                            returnURL,
+                            notifyURL,
+                            "",
+                            RequestType.PAY_WITH_CREDIT,
+                            Boolean.TRUE
+                    );
 
 
             assert captureCreditMoMoResponse != null;

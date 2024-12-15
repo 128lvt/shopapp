@@ -89,6 +89,7 @@ public class OrderService {
     }
 
     public void updateStatus(Long id, String status) {
+        //tim order
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(status);
         orderRepository.save(order);

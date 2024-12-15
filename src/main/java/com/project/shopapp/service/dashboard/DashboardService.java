@@ -21,7 +21,7 @@ public class DashboardService {
     private final OrderRepository orderRepository;
 
     public List<TopSellingProductsMonthly> getTopSellingProducts() {
-        return monthlyRepository.getTopSellingProductsMonthly();
+        return monthlyRepository.findAll();
     }
 
     public List<TopSellingCategory> getTopSellingCategories() {
