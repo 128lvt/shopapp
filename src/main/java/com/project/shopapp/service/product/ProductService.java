@@ -47,8 +47,7 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Cannot find product with id: " + id));
     }
 
-    public Page<Product> searchProducts(String name, Double minPrice, Double maxPrice,
-                                        String description, List<Long> categoryIds,
+    public Page<Product> searchProducts(String name, List<Long> categoryIds,
                                         String sortOrder, int page, int limit) {
 
         Sort sort = Sort.by(sortOrder);
@@ -61,7 +60,7 @@ public class ProductService {
         }
 
         PageRequest pageRequest = PageRequest.of(page, limit, sort);
-        return productRepository.findProductsByFilters(name, minPrice, maxPrice, description, categoryIds, pageRequest);
+        return productRepository.findProductsByFilters(name, categoryIds, pageRequest);
     }
 
 

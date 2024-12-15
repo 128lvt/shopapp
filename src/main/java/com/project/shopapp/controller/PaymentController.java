@@ -41,8 +41,9 @@ public class PaymentController {
         try {
             Order order = orderService.createOrder(orderDTO);
 
-            String requestId = String.valueOf(System.currentTimeMillis());
-            Long orderId = order.getId();
+            String requestId = "";
+            String id = order.getId().toString();
+            String orderId = "";
             Long transId = 2L;
             Long amount = (long) order.getTotalMoney().floatValue();
 
@@ -55,15 +56,25 @@ public class PaymentController {
             Environment environment = Environment.selectEnv("dev");
 
 
-            PaymentResponse captureATMMoMoResponse = CreateOrderMoMo.process(environment, orderId.toString(), requestId, String.valueOf(amount), orderInfo, returnURL, notifyURL, "", RequestType.PAY_WITH_ATM, null);
+//            requestId = String.valueOf(System.currentTimeMillis());
+//            orderId = id + String.valueOf(System.currentTimeMillis());
+//            PaymentResponse captureWalletMoMoResponse = CreateOrderMoMo.process(environment, orderId, requestId, Long.toString(amount), orderInfo, returnURL, notifyURL, "", RequestType.CAPTURE_WALLET, Boolean.TRUE);
+//
+//            requestId = String.valueOf(System.currentTimeMillis());
+//            orderId = id + String.valueOf(System.currentTimeMillis());
+//            PaymentResponse captureATMMoMoResponse = CreateOrderMoMo.process(environment, orderId, requestId, String.valueOf(amount), orderInfo, returnURL, notifyURL, "", RequestType.PAY_WITH_ATM, null);
+
+            requestId = String.valueOf(System.currentTimeMillis());
+            orderId = id + String.valueOf(System.currentTimeMillis());
+            PaymentResponse captureCreditMoMoResponse = CreateOrderMoMo.process(environment, orderId, requestId, Long.toString(amount), orderInfo, returnURL, notifyURL, "", RequestType.PAY_WITH_CREDIT, Boolean.TRUE);
 
 
-            assert captureATMMoMoResponse != null;
+            assert captureCreditMoMoResponse != null;
             return ResponseEntity.ok().body(Response.builder()
                     .message("Tạo đơn hàng thành công")
                     .data(Map.of(
                             "order", order,
-                            "payment", captureATMMoMoResponse
+                            "payment", captureCreditMoMoResponse
                     ))
                     .build());
         } catch (Exception e) {
@@ -112,7 +123,8 @@ public class PaymentController {
 
         // Xử lý logic dựa trên resultCode (0 = thành công, khác 0 = thất bại)
         if ("0".equals(resultCode)) {
-            orderService.updatePaymentStatus(Long.parseLong(orderId), "Đã thanh toán");
+            String id = orderId.substring(0, orderId.length() - 13);
+            orderService.updatePaymentStatus(Long.parseLong(id), "Đã thanh toán");
             System.out.println("Transaction successful!");
         } else {
             // Giao dịch thất bại

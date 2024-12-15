@@ -75,17 +75,23 @@ public class ProductController {
                         .build());
             }
 
-        } catch (DataNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
 
     @PutMapping("/variant/{id}")
     public ResponseEntity<?> updateProductVariant(@PathVariable Long id, @Valid @RequestBody ProductVariantDTO productVariantDTO) throws DataNotFoundException {
-        return ResponseEntity.ok().body(Response.success(variantService.update(id, productVariantDTO)));
+        try {
+            if (variantService.existsVariant(productVariantDTO.getProductId(), productVariantDTO.getColor(), productVariantDTO.getSize())) {
+                return ResponseEntity.badRequest().body(Response.error("Color, size đã tồn tại"));
+            } else {
+                return ResponseEntity.ok().body(Response.success(variantService.update(id, productVariantDTO)));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/variant/{id}")
@@ -219,9 +225,6 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<?> searchProducts(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "minPrice", required = false) Double minPrice,
-            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
-            @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "categoryIds", required = false) List<Long> categoryIds,
             @RequestParam(value = "sortOrder", defaultValue = "-1") String sortOrder,
             @RequestParam("page") int page,
@@ -236,10 +239,10 @@ public class ProductController {
         }
 
         //Phan trang
-        Page<Product> productPage = productService.searchProducts(name, minPrice, maxPrice, description, categoryIds, sortOrder, page, limit);
+        Page<Product> productPage = productService.searchProducts(name, categoryIds, sortOrder, page, limit);
         int totalPages = productPage.getTotalPages();
         List<Product> products = productPage.getContent();
-        
+
         return ResponseEntity.ok().body(Response.success(ProductResponse.builder().products(products).totalPages(totalPages).build()));
     }
 

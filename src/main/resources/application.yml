@@ -45,5 +45,5 @@ jwt:
   expiration: 259200 #30 ngay
   secret_key: mlfpofQBNxVBBxFi2tWyB8CU6jbSR9HM
 
-returnUrl: http://localhost:3000/momo/callback
-notifyUrl: http://bombom.id.vn:3000/api/v1/payments/momo/callback
+returnUrl: http://${ENDPOINT}/momo/callback
+notifyUrl: http://${ENDPOINT}/api/v1/payments/momo/callback
