@@ -53,11 +53,12 @@ public class UserController {
     @GetMapping("/token")
     public ResponseEntity<?> generateToken(@Valid @RequestParam String email) {
         try {
-            //Kiem tra email ton tai chua
+            //Kiem tra tokem da dc gui den email chua
             if (tokenService.findByUserEmail(email) != null) {
                 return ResponseEntity.badRequest().body(Response.success("Token đã được gửi đến email của bạn, vui lòng không SPAM."));
             }
-            
+
+            //cho nay tu kiem tra email da duoc dang ky trong he thong chua
             User user = userService.findByEmail(email);
 
             String token = tokenService.createToken(user);
