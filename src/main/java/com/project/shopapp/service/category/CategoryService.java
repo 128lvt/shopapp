@@ -32,12 +32,12 @@ public class CategoryService {
     }
 
 
-    public void updateCategory(Long id, CategoryDTO categoryDTO) {
+    public Category updateCategory(Long id, CategoryDTO categoryDTO) {
         //Tim category
         Category existingCategory = getCategoryById(id);
         existingCategory.setName(categoryDTO.getName());
         //Luu vao database
-        categoryRepository.save(existingCategory);
+        return categoryRepository.save(existingCategory);
     }
 
 
